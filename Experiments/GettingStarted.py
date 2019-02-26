@@ -20,3 +20,6 @@ def findRelations(inputText):
 findRelations('I love chocolate, therefore I am fat.')
 findRelations('Obama is no longer the president of the united states, hence there is someone else running the USA.')
 findRelations('I would go to the cinema but it is closed')
+
+# Could use another algorithm to separate paragraph of text into these 
+# sentences/statements and then feed through here as one of the processing layers
