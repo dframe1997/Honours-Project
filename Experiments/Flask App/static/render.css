@@ -1,0 +1,72 @@
+body{
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: black;
+    font-family: nunito;
+}
+
+img{
+    width: 330px;
+    border-radius: 10px;
+}
+
+.headline{
+    margin: 0;
+    display: flex;
+    flex-grow: 3;
+    color: white;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px;
+}
+
+.headline h1{
+    flex-grow: 1;
+    height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.source{
+    margin: 0;
+}
+
+header{
+    display: flex;
+    width: 100%;
+    text-align: left;
+    background-image: linear-gradient(to bottom right, #00FF80, #00c9d3);
+}
+
+.imgContainer{
+    padding: 50px;
+    padding-right: 30px;
+    padding-left: 30px;
+    text-align: end;
+}
+
+nav{
+    justify-self: flex-end;
+    background-image: linear-gradient(to right, #00e6a7, #00c9d3);
+    margin-top: -40px;
+    position: sticky;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    top: 0;
+    display: flex;
+    padding-left: 24px;
+}
+
+nav button{
+    background: none;
+    border: 0;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: nunito;
+}
+
+button:focus {
+    outline:none;
+}
