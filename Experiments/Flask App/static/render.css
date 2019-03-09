@@ -4,6 +4,8 @@ body{
     text-align: center;
     color: black;
     font-family: nunito;
+    display: flex;
+    flex-direction: column;
 }
 
 img{
@@ -69,4 +71,11 @@ nav button{
 
 button:focus {
     outline:none;
+}
+
+#mainContent{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

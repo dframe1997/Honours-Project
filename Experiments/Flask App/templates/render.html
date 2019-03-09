@@ -1,3 +1,4 @@
+<link rel="icon" type="image/png" href="/static/pickaxe.png" />
 <link rel="stylesheet" href="/static/render.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 <!--<nav class="smallNav">
@@ -7,44 +8,48 @@
 	<button class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
 </nav>-->
 <title>Pickaxe</title>
-<header>
-	<div class="headline">
-		<p class="source">
-			Sourced from <a href={{output.url}}>{{ output.url }}</a>
-		</p>
-		<h1>{{ output.title }}</h1>
-	</div>
-	<div class="imgContainer">
-		<img src="{{ output.topImage }}"/>
-	</div>	
-</header>
+<div id="topSection">
+	<header>
+		<div class="headline">
+			<p class="source">
+				Sourced from <a href={{output.url}}>{{ output.url }}</a>
+			</p>
+			<h1>{{ output.title }}</h1>
+		</div>
+		<div class="imgContainer">
+			<img src="{{ output.topImage }}"/>
+		</div>	
+	</header>
+</div>
 <nav>
 	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
 	<button class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
 	<button class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
 	<button class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
 </nav>
-<div id="summary" class="tab">
-	<p>{{ output.summary }}</p>
+<div id="mainContent">
+	<div id="summary" class="tab">
+		<p>{{ output.summary }}</p>
+	</div>
+	<div id="details" class="tab">
+		<p>Author(s): {{ output.author }}</p>
+		<p>Publish Date: {{ output.publishDate }}</p>
+		<p>Keywords: {{ output.keywords }}</p>
+	</div>
+	<article id="article" class="tab">
+		<p>{{ output.text }}</p>
+	</article>
+	<div id="sentences" class="tab">
+		{% for sentence in output.sentences %}
+			<p>Sentence Text: {{ sentence.text }}</p>
+			<p>Sentence Tokens: {{ sentence.tokens }}</p>
+			<p>Sentence Tagged: {{ sentence.tagged }}</p>
+			<p>Sentence Entities: {{ sentence.entities }}</p>
+			<p>----------</p>
+		{% endfor %}
+	</div>
+	<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 </div>
-<div id="details" class="tab">
-	<p>Author(s): {{ output.author }}</p>
-	<p>Publish Date: {{ output.publishDate }}</p>
-	<p>Keywords: {{ output.keywords }}</p>
-</div>
-<article id="article" class="tab">
-	<p>{{ output.text }}</p>
-</article>
-<div id="sentences" class="tab">
-	{% for sentence in output.sentences %}
-		<p>Sentence Text: {{ sentence.text }}</p>
-		<p>Sentence Tokens: {{ sentence.tokens }}</p>
-		<p>Sentence Tagged: {{ sentence.tagged }}</p>
-		<p>Sentence Entities: {{ sentence.entities }}</p>
-		<p>----------</p>
-	{% endfor %}
-</div>
-
 <script>
 window.onload = openTab('summary');
 function openTab(tabName) {
