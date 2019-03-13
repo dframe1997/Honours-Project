@@ -51,22 +51,35 @@ header{
 
 nav{
     justify-self: flex-end;
+    justify-content: space-around;
+    flex-wrap: wrap;
     background-image: linear-gradient(to right, #00e6a7, #00c9d3);
-    margin-top: -40px;
+    margin-top: -39px;
     position: sticky;
-    padding-top: 1%;
-    padding-bottom: 1%;
     top: 0;
     display: flex;
-    padding-left: 24px;
 }
 
-nav button{
+nav button, nav a{
     background: none;
+    transition: 0.2s;
     border: 0;
+    border-bottom: 3px red solid;
+    border-bottom-color: rgba(255,255,255,0);
     font-size: 15px;
     cursor: pointer;
     font-family: nunito;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    flex-grow: 1;
+}
+
+nav button:hover, nav a:hover{
+    border-bottom-color: rgba(255,255,255,0.8);
+}
+
+nav button[active='true']{
+    border-bottom-color: rgba(255,255,255,1);
 }
 
 button:focus {
@@ -78,4 +91,61 @@ button:focus {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 30px;
+    text-align: justify;
+}
+
+#homeButton img{
+    width: 25px;
+}
+
+p{
+    margin: 0;
+}
+
+#sentenceNav{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    background: #3c3c3c;
+    align-items: center;
+    box-shadow: 2px 2px 5px 0px #cccccc;
+    margin: -30px;
+    margin-bottom: 30px;
+    padding: 8px;
+}
+
+.counter{
+    color: white;
+}
+
+#dots, #navigation{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#nextSentence, #prevSentence{
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+#nextSentence[enabled='false'], #prevSentence[enabled='false']{
+    cursor: default;
+}
+
+.sentenceDot{
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.sentenceDot, #nextSentence, #prevSentence{
+    margin: 2px;
+}
+
+#footer{
+    text-align: center;
 }

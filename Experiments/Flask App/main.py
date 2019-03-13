@@ -26,8 +26,7 @@ def Home():
     if request.method == 'POST':
         print(request.form)
         url = request.form['url']
-        algorithm = request.form['algorithm']
-        return redirect(url_for('.API', url=url, algorithm=algorithm, outputFormat='html'))
+        return redirect(url_for('.API', url=url, outputFormat='html'))
     else:
         return render_template('home.html')
 

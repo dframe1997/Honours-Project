@@ -1,8 +1,20 @@
-<h1>Home</h1>
+<link rel="stylesheet" href="/static/home.css" type="text/css">
+<h1>Welcome to Pickaxe</h1>
 <form method="post" name="form" action="">
-    <label>URL</label>
+    <label>Enter your URL here</label>
     <input name="url" type="text" id="url" required/>
-    <label>Algorithm</label>
-    <input name="algorithm" type="text" id="algorithm" required/>
-    <input type="submit" name="submit" id="submit"/>
+    <input type="submit" name="submit" id="submit" value="Start Mining" onclick="load()"/>
 </form>
+<div id="loading">
+    <div id="spinner">
+        <img id="pickaxe" src="/static/pickaxe.png"/>
+    </div>
+    Mining...
+</div>
+
+<script>
+    document.getElementById("loading").style.display = "none";
+    function load(){
+        document.getElementById("loading").style.display = "flex";
+    }
+</script>

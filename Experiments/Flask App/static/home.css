@@ -1,0 +1,92 @@
+body{
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: black;
+    font-family: nunito;
+    display: flex;
+    flex-direction: column;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: nunito;
+    font-size: 1.2em;
+    text-align: left;
+    background-image: linear-gradient(to bottom right, #00FF80, #00c9d3);
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+input{
+    color: black;
+    font-family: nunito;
+    font-size: 1.1em;
+    background: white;
+    border: 0;
+    border-radius: 50px;
+}
+
+input[type='submit']{
+    padding: 10px 20px 10px 20px;
+    cursor: pointer;
+}
+
+input[type='text']{
+    padding: 5px;
+    margin: 10px;
+    margin-bottom: 30px;
+}
+
+form label{
+    text-align: center;
+}
+
+#loading{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#spinner{
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    border: white solid 3px;
+    border-top: blue solid 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes backspin {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+#pickaxe{
+    width: 60%;
+    height: 60%;
+    animation: backspin 1s linear infinite;
+}
