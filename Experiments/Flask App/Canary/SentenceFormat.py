@@ -4,3 +4,5 @@ class Sentence():
         self.tokens = tokens
         self.tagged = tagged
         self.entities = entities
+        self.periodic = False
+        self.arguement = False

@@ -1,7 +1,7 @@
 import nltk
 import flask
 from flask import render_template, url_for, request, redirect, abort, json, flash
-from Canary import URLDownloader, OutputFormat
+from Canary import URLDownloader, OutputFormat, periodic
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -12,7 +12,8 @@ nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\
 def API():
     url = request.args['url']
     outputFormat = request.args['outputFormat']
-    output = URLDownloader.processURL(url)    
+    output = URLDownloader.processURL(url)   
+    output.sentences = periodic.process(output.sentences); 
     if outputFormat == 'html':
         return render_template('render.html', output=output)
     elif outputFormat == 'json':
