@@ -6,7 +6,7 @@ def process(sentences):
     #Loop through the sentences and assign each one as either periodic
     for sentence in sentences:
         sentence.periodic = isPeriodic(sentence)
-        if sentence.periodic = true:
+        if sentence.periodic == True:
             sentence.argument = isArgument(sentence)
         #Otherwise the argument will default to false and won't be processed any further
 
@@ -17,5 +17,10 @@ def isPeriodic(sentence):
     return True
 
 def isArgument(sentence):
-    return True
+    if 'if' in sentence.tokens:
+        print('true')
+        return True
+    else:
+        print('false')
+        return False
 
