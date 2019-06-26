@@ -110,11 +110,12 @@ def treeStructure(sentence, debug):
         h = node.height()
         if h <= treeSearchDepth:
             if node.label() != "VP":
-                if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree):
+                if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree): #Should it be topOfTree or node (aka search the subtree topped by node)?
                     return True
-            else:
-                if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree):
-                    return False
+            #else:
+                #if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree):
+                    #return False
+                    # ONLY IMPLEMENT IF NEED TO DETECT LOOSE SENTENCES
     return False
 
 def detectPeriodic(text, debug, natureOfSentences):
@@ -180,7 +181,7 @@ else:
     detectPeriodic(inputContent, debug, "Unknown") #We don't know the nature of the sentences
 
 end = time.time()
-print("Run time: " + (end - start))
+print("Run time: " + str(end - start) + " seconds"
 input("Press Enter to continue...")
 
 
