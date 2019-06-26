@@ -2,13 +2,26 @@ from newspaper import Article
 import nltk
 import flask
 import os
+from nltk.corpus import treebank
+from nltk.tokenize import sent_tokenize
+from nltk.corpus.reader import ChunkedCorpusReader
+from nltk.tree import Tree
 from flask import render_template, url_for, request, redirect, abort, json, flash
+import sys
+
+sys.path.insert(0, '../../../perkeleyparser')
+
+from BerkeleyParser import parser
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\NLTK")
 
+berkeleyPath = "../../../berkeleyparser/berkeleyParser-1.7.jar"
+grammarPath = "../../../berkeleyparser/eng_sm6.gr"
+
+treeSearchDepth = 1
 class SentenceObject:
     text = ""
     tokens = []
@@ -21,6 +34,10 @@ def cls():
     while n < 100:
         print("\n")
         n = n + 1
+
+def filter(tree):
+        child_nodes = [child.label() for child in tree if isinstance(child, nltk.Tree)]
+        return  (tree.label() == 'VP') and ('S' in child_nodes)
 
 def openFile(fileLocation):
     inputFile = open(fileLocation, "r")
@@ -39,7 +56,7 @@ def openFile(fileLocation):
 def splitSentences(text):
     #Splitting the article into sentences
     sentenceList = []
-    sentences = text.split(". ")
+    sentences = sent_tokenize(text)
     for sentence in sentences:
         sentenceObject = SentenceObject()
 
@@ -51,6 +68,9 @@ def splitSentences(text):
         #output += tagged[0:6]
 
         sentenceObject.entities = nltk.chunk.ne_chunk(sentenceObject.tagged)
+
+        #tree = [subtree for tree in treebank.parsed_sents() for subtree in tree.subtrees(filter)]
+        #print tree
 
         #from nltk.corpus import treebank
         #t = treebank.parsed_sents('wsj_0001.mrg')[0]
@@ -78,6 +98,25 @@ def treeShape(sentence, debug):
     else:
         return False
 
+def treeStructure(sentence, debug):
+    #Based on characterizing stylistic elements
+    p = parser(berkeleyPath, grammarPath)
+    treeString = p.parse(sentence.text)
+    p.terminate()
+    tree = Tree.fromstring(treeString)
+    #topOfTree = tree[0:treeSearchDepth] #It's not a string - need a new way to get the top layers of tree
+    topOfTree = tree
+    for node in topOfTree:
+        h = node.height()
+        if h <= treeSearchDepth:
+            if node.label() != "VP":
+                if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree):
+                    return True
+            else:
+                if any(x.label() == "S" for x in topOfTree) or any(x.label() == "SBAR" for x in topOfTree):
+                    return False
+    return False
+
 def detectPeriodic(text, debug, natureOfSentences):
     sentences = splitSentences(text)
     score = 0
@@ -87,8 +126,8 @@ def detectPeriodic(text, debug, natureOfSentences):
             print(sentence.tokens)
             print(sentence.tagged)
             print(sentence.entities)
-
-        if startingWords(sentence, debug) or treeShape(sentence, debug):
+        #sentence.entities.draw()
+        if startingWords(sentence, debug) or treeStructure(sentence, debug):
             sentence.periodic = True
             if natureOfSentences == "Periodic":
                 score += 1
@@ -104,6 +143,9 @@ def detectPeriodic(text, debug, natureOfSentences):
 
 #Main program
 #Options
+import time
+start = time.time()
+
 testModeInput = input("Run test mode? (Default: N)")
 testMode = False
 
@@ -137,6 +179,8 @@ else:
     cls()
     detectPeriodic(inputContent, debug, "Unknown") #We don't know the nature of the sentences
 
+end = time.time()
+print("Run time: " + (end - start))
 input("Press Enter to continue...")
 
 
