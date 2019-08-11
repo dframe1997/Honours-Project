@@ -1,0 +1,47 @@
+<link rel="icon" type="image/png" href="/static/pickaxe.png" />
+<link rel="stylesheet" href="/static/home.css" type="text/css">
+<title>Pickaxe</title>
+<h1>Welcome to Pickaxe</h1>
+<form method="post" name="form" action="" id="form">
+    <div id="textField">
+        <label>Enter your text or URL</label>
+        <textarea name="text" id="text"></textarea>
+    </div>
+    <div id="options">
+        <label>Select the type of input you are using</label>
+        <select name="textType" id="textType"/>
+            <option value="Text">Text</option>
+            <option value="URL">URL</option>
+            <option value="Test">Test</option>
+        </select>
+        <label>Run in debug mode?</label>
+        <select name="debug" id="debug"/>
+            <option value="False">No</option>
+            <option value="True">Yes</option>
+        </select>
+        <label>Check if argument?</label>
+        <select name="argument" id="argument"/>
+            <option value="False">No</option>
+            <option value="True">Yes</option>
+        </select>
+        <label>Select your preferred output type</label>
+        <select name="outputFormat" id="outputFormat"/>
+            <option value="html">HTML Webpage (Interactive)</option>
+            <option value="sadface">SADFace (For further processing)</option>
+        </select>
+        <input type="submit" name="submit" id="submit" value="Start Mining" onclick="load()"/>
+    </div>
+</form>
+<div id="loading">
+    <div id="spinner">
+        <img id="pickaxe" src="/static/pickaxe.png"/>
+    </div>
+    Mining...
+</div>
+
+<script>
+    document.getElementById("loading").style.display = "none";
+    function load(){
+        document.getElementById("loading").style.display = "flex";
+    }
+</script>

@@ -1,0 +1,185 @@
+<link rel="icon" type="image/png" href="/static/pickaxe.png" />
+<link rel="stylesheet" href="/static/render.css" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+<!--<nav class="smallNav">
+	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
+	<button class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
+	<button class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
+	<button class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
+</nav>-->
+<title>Pickaxe</title>
+{% if textType == "URL" %}
+	<div id="topSection">
+		<header>
+			<div class="headline">
+				<p class="source">
+					Sourced from <a href={{output.url}}>{{ output.url }}</a>
+				</p>
+				<h1>{{ output.title }}</h1>
+			</div>
+			<div class="imgContainer">
+				<img src="{{ output.topImage }}"/>
+			</div>	
+		</header>
+	</div>
+{% endif %}
+<nav {% if textType != "URL" %} style="margin-top: 0" {% endif %}>
+	<a id="homeButton" href="./home"><img src="/static/home.png"></a>
+	<button active='true' class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
+	<button active='false' class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
+	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
+	<button active='false'class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
+</nav>
+<div id="mainContent">
+	<div id="summary" class="tab">
+		<p>{{ output.summary }}</p>
+	</div>
+	<div id="details" class="tab">
+		<p>Author(s): {{ output.author }}</p>
+		<p>Publish Date: {{ output.publishDate }}</p>
+		<p>Keywords: {{ output.keywords }}</p>
+		<p>Run Time: {{runtime}} seconds</p>
+	</div>
+	<article id="article" class="tab">
+		<p>{{ output.text }}</p>
+	</article>
+	<div id="sentences" class="tab">
+		<div id="sentenceNav">
+			<p id="dotsOn" class="counter">1 of x</p>
+			<div id="navigation">
+				<img enabled='false' id="prevSentence" onclick="prevSentence()" src="/static/left-arrow-green.png"/>	
+				<div id="dots">
+					{% for sentence in output.sentences %}
+						<div class="sentenceDot" onclick="sentenceSet({{loop.index0}})"></div>
+					{% endfor %}
+				</div>
+				<p id="dotsOff" class="counter">1 of x</p>
+				<img enabled='true' id="nextSentence" onclick="nextSentence()" src="static/right-arrow-green.png"/>
+			</div>
+		</div>	
+		{% for sentence in output.sentences %}
+		<div class="sentence" id="{{loop.index0}}">
+			<p>Sentence Text: {{ sentence.text }}</p>
+			{% if debug == "True" %}
+				<p>Sentence Tokens: {{ sentence.tokens }}</p>
+				<p>Sentence Tagged: {{ sentence.tagged }}</p>
+				<p>Sentence Entities: {{ sentence.entities }}</p>
+			{% endif %}
+			<p>Periodic: {{ sentence.periodic }}</p>
+			<p>Argument: {{ sentence.argument }}</p>
+		</div>			
+		{% endfor %}	
+	</div>
+	<div id="footer">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>, <a href="https://www.google.com/" title="Google">Google</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</div>
+<script>
+//Variables
+sentenceID = 0;
+var sentences = document.getElementsByClassName("sentence");
+var sentenceDots = document.getElementsByClassName("sentenceDot");
+dotMode = true;
+counters = document.getElementsByClassName('counter');
+
+dotModeCheck();
+
+window.onload = initialisePage();
+window.onload = openTab('summary');
+
+function dotModeCheck(){
+	if(sentences.length >= 20){
+		dotMode = false;
+		document.getElementById("dots").style.display = "none";
+		document.getElementById("dotsOn").style.display = "none";
+	}
+	else{
+		document.getElementById("dotsOff").style.display = "none";
+	}
+}
+
+function openTab(tabName) {
+  	var tabs = document.getElementsByClassName("tab");
+  	var tabButtons = document.getElementsByClassName("tabButton");
+	for (var i = 0; i < tabs.length; i++) {
+  	  tabs[i].style.display = "none"; 
+		tabButtons[i].style.color = "rgba(255,255,255,0.5)";
+		tabButtons[i].setAttribute('active', 'false');
+  	}
+  	document.getElementById(tabName).style.display = "block"; 
+	document.getElementById(tabName+'Button').style.color = "white";
+	document.getElementById(tabName+'Button').setAttribute('active', 'true');
+}
+
+function nextSentence(){
+	if(sentenceID < sentences.length-1){
+		clearSentences();
+		sentenceID = sentenceID + 1;
+		sentences[sentenceID].style.display = "block";
+		if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";		
+		changeButtons();
+	}	
+}
+
+function prevSentence(){
+	if(sentenceID > 0){
+		clearSentences();
+		sentenceID = sentenceID - 1;
+		sentences[sentenceID].style.display = "block";	
+		if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";	
+		changeButtons();
+	}	
+}
+
+function sentenceSet(index){
+	clearSentences();
+	sentenceID = index;
+	sentences[sentenceID].style.display = "block";	
+	if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";
+	changeButtons();	
+}
+
+function changeButtons(){
+	if(sentenceID > 0){
+		document.getElementById('prevSentence').src = "/static/left-arrow-blue.png";
+		document.getElementById('prevSentence').setAttribute('enabled', 'true');
+	}
+	else{
+		document.getElementById('prevSentence').src = "/static/left-arrow-grey.png";
+		document.getElementById('prevSentence').setAttribute('enabled', 'false');
+	}
+	if(sentenceID < sentences.length-1){
+		document.getElementById('nextSentence').src = "/static/right-arrow-blue.png";
+		document.getElementById('nextSentence').setAttribute('enabled', 'true');
+	}
+	else{
+		document.getElementById('nextSentence').src = "/static/right-arrow-grey.png";
+		document.getElementById('nextSentence').setAttribute('enabled', 'false');
+	}
+	
+	for(var counter of counters){
+		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
+	}	
+}
+
+function clearSentences(){
+	for (var i = 0; i < sentences.length; i++) {
+		sentences[i].style.display = "none"; 
+		if(dotMode) sentenceDots[i].style.background = "grey";
+	}
+}
+
+function initialisePage(){
+	for (var i = 0; i < sentences.length; i++) {
+		sentences[i].style.display = "none"; 
+		if(dotMode) sentenceDots[i].style.background = "grey";
+	}
+	sentences[sentenceID].style.display = "block";
+	if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";
+
+	for(var counter of counters){
+		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
+	}
+
+	document.getElementById('prevSentence').src = "/static/left-arrow-grey.png";
+	document.getElementById('nextSentence').src = "/static/right-arrow-blue.png";
+}
+</script>

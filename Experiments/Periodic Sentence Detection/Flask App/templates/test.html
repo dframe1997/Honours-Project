@@ -1,0 +1,36 @@
+<link rel="icon" type="image/png" href="/static/pickaxe.png" />
+<link rel="stylesheet" href="/static/test.css" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+<!--<nav class="smallNav">
+	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
+	<button class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
+	<button class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
+	<button class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
+</nav>-->
+<title>Pickaxe</title>
+<div id="mainContent">
+	<table id="sentences" class="tab">
+		<tr>
+			<th>Sentence Text</th>
+			<th>Guessed type</th>
+			<th>Actual type</th>
+		</tr>
+		{% for sentence in output.sentences %}		
+		<tr>
+			<td>{{ sentence.text }}</td>
+			{% if sentence.periodic %}
+				<td>Periodic</td>
+			{% else %}
+				<td>Not Periodic</td>
+			{% endif %}
+			<td>{{ sentence.knownType }}</td>
+		</tr>			
+		{% endfor %}	
+	</table>
+	<div id="stats">
+		<p>Percentage of periodic sentences correctly identified: {{periodicScore}}%</p>
+		<p>Percentage of not-periodic sentences correctly identified: {{notPeriodicScore}}%</p>
+		<p>Run time: {{runtime}} seconds</p>
+	</div>
+	<div id="footer">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>, <a href="https://www.google.com/" title="Google">Google</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</div>
