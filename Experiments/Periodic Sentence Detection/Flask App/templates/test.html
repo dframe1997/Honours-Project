@@ -9,14 +9,19 @@
 </nav>-->
 <title>Pickaxe</title>
 <div id="mainContent">
+	<div id="stats">
+		<p>Percentage of periodic sentences correctly identified: {{periodicScore}}%</p>
+		<p>Percentage of not-periodic sentences correctly identified: {{notPeriodicScore}}%</p>
+		<p>Run time: {{runtime}} seconds</p>
+	</div>
 	<table id="sentences" class="tab">
 		<tr>
 			<th>Sentence Text</th>
-			<th>Guessed type</th>
-			<th>Actual type</th>
+			<th class="minColWidth">Guessed type</th>
+			<th class="minColWidth">Actual type</th>
 		</tr>
 		{% for sentence in output.sentences %}		
-		<tr>
+		<tr {% if (sentence.periodic and sentence.knownType != "Periodic") or ((not sentence.periodic) and sentence.knownType != "Not Periodic") %} style="background: red; color: white;" {% endif %}>
 			<td>{{ sentence.text }}</td>
 			{% if sentence.periodic %}
 				<td>Periodic</td>
@@ -27,10 +32,5 @@
 		</tr>			
 		{% endfor %}	
 	</table>
-	<div id="stats">
-		<p>Percentage of periodic sentences correctly identified: {{periodicScore}}%</p>
-		<p>Percentage of not-periodic sentences correctly identified: {{notPeriodicScore}}%</p>
-		<p>Run time: {{runtime}} seconds</p>
-	</div>
 	<div id="footer">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>, <a href="https://www.google.com/" title="Google">Google</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 </div>

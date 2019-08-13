@@ -3,11 +3,23 @@ import flask
 import time
 from flask import render_template, url_for, request, redirect, abort, json, flash
 from Canary import ProcessInput, OutputFormat, periodic, ProcessOutput
+import sys
+
+sys.path.insert(0, '../../../../perkeleyparser')
+
+from BerkeleyParser import parser
+
+berkeleyPath = "../../../../berkeleyparser/berkeleyParser-1.7.jar"
+grammarPath = "../../../../berkeleyparser/eng_sm6.gr"
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\NLTK")
+
+parserIsTerminated = False
+
+parserTool = parser(berkeleyPath, grammarPath)
 
 @app.route('/', methods=['GET'])
 def API():
@@ -19,18 +31,23 @@ def API():
     start = time.time()
     periodicScore = 0
     notPeriodicScore = 0
+    #global parserIsTerminated
+    #global parserTool
+
+    #if parserIsTerminated:
+        #parserTool = parser(berkeleyPath, grammarPath)
 
     if textType == "Test":
         allNewSentences = []
         output = ProcessInput.process(text, "Periodic") 
-        output.sentences, periodicScore, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "Periodic") #We don't know the nature of the sentences
+        output.sentences, periodicScore, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "Periodic", parserTool) #We don't know the nature of the sentences
         
         for sentence in output.sentences:
             sentence.knownType = "Periodic"
             allNewSentences.append(sentence)
 
         output = ProcessInput.process(text, "NotPeriodic") 
-        output.sentences, notPeriodicScore, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "NotPeriodic") #We don't know the nature of the sentences
+        output.sentences, notPeriodicScore, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "NotPeriodic", parserTool) #We don't know the nature of the sentences
     
         for sentence in output.sentences:
             sentence.knownType = "Not Periodic"
@@ -39,12 +56,15 @@ def API():
         output.sentences = allNewSentences
     else:
         output = ProcessInput.process(text, textType)   
-        output.sentences, score, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "Unknown") #We don't know the nature of the sentences
+        output.sentences, score, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "Unknown", parserTool) #We don't know the nature of the sentences
     
     if numPeriodic > 1:
         plural = "s"
     else:
         plural = ""
+    
+    #parserTool.terminate()
+    #parserIsTerminated = True
 
     output.summary += "\n" + str(numPeriodic) + " periodic sentence" + plural + " detected."
     end = time.time()

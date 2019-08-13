@@ -14,10 +14,32 @@ th, tr{
     padding-left: 1%;
 }
 
+td, th{
+    min-width: 20%;
+    padding: 1%;
+}
+
 table{
     padding: 2%;
     background: white;
     border-radius: 20px;
     margin: 2%;
     color: black;
+}
+
+#stats{
+    display: flex;
+}
+
+p{
+    border-radius: 50px;
+    margin: 2%;
+    color: black;
+    background: white;
+    padding: 10px;
+    margin-bottom: 0;
+}
+
+.minColWidth{
+    width: 100px;
 }
