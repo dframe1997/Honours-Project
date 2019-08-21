@@ -19,6 +19,7 @@
 			<th>Sentence Text</th>
 			<th class="minColWidth">Guessed type</th>
 			<th class="minColWidth">Actual type</th>
+			<th class="minColWidth">Tree</th>
 		</tr>
 		{% for sentence in output.sentences %}		
 		<tr {% if (sentence.periodic and sentence.knownType != "Periodic") or ((not sentence.periodic) and sentence.knownType != "Not Periodic") %} style="background: red; color: white;" {% endif %}>
@@ -29,6 +30,7 @@
 				<td>Not Periodic</td>
 			{% endif %}
 			<td>{{ sentence.knownType }}</td>
+			<td>{{ sentence.entities }}</td>
 		</tr>			
 		{% endfor %}	
 	</table>

@@ -11,6 +11,7 @@ from BerkeleyParser import parser
 
 berkeleyPath = "../../../../berkeleyparser/berkeleyParser-1.7.jar"
 grammarPath = "../../../../berkeleyparser/eng_sm6.gr"
+arguments = "-tokenize"
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -19,7 +20,7 @@ nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\
 
 parserIsTerminated = False
 
-parserTool = parser(berkeleyPath, grammarPath)
+parserTool = parser(berkeleyPath, grammarPath, arguments)
 
 @app.route('/', methods=['GET'])
 def API():
