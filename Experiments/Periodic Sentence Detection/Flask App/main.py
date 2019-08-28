@@ -25,6 +25,10 @@ parserTool = None
 
 fromHomePage = False
 
+#file = request.files['file']
+#f = secure_filename(file.filename)
+#text=f.read()
+
 def reloadParser():
     global parserIsTerminated
     global parserTool
@@ -96,15 +100,21 @@ def API():
     output.summary += "\n" + str(numPeriodic) + " periodic sentence" + plural + " detected."
     end = time.time()
     print("Run time: " + str(end - start) + " seconds")
-    if textType == "Test":
-        return render_template('test.html', output=output, periodicScore=periodicScore, notPeriodicScore=notPeriodicScore, debug=debug, runtime=str(round(end - start)))
-    elif outputFormat == 'html':
-        return render_template('render.html', output=output, debug=debug, textType=textType, runtime=str(round(end - start)))
+    
+    if outputFormat == 'html':
+        if textType == "Test":
+            return render_template('test.html', output=output, periodicScore=periodicScore, notPeriodicScore=notPeriodicScore, debug=debug, runtime=str(round(end - start)))
+        else:
+            return render_template('render.html', output=output, debug=debug, textType=textType, runtime=str(round(end - start)))
     elif outputFormat == 'sadface':
-        return ProcessOutput.renderSADFace(output.sentences)
+        return ProcessOutput.renderSADFace(output)
+    elif outputFormat == 'json':
+        return ProcessOutput.renderJSON(output)
+    elif outputFormat == 'pickle':
+        return ProcessOutput.renderPickle(output)
     else:
-        return '<h2>Sorry, "' + outputFormat + '" is not a supported output format. Please specify "html" or "sadface" as the output format instead.<h2>'
-    return flask.jsonify(sentences)
+        return '<h2>Sorry, "' + outputFormat + '" is not a supported output format. Please specify "html", "json", "pickle" or "sadface" as the output format instead.<h2>'
+    return None
 
 @app.route('/home', methods=['POST','GET'])
 def Home():

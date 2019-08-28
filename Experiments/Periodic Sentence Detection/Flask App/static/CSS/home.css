@@ -141,5 +141,4 @@ textarea{
   ::-webkit-scrollbar-thumb:hover {
     background: #4ab0fe; 
     background-clip: padding-box;
-    cursor: pointer !important;
   }

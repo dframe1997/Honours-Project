@@ -1,10 +1,12 @@
 import sys
+import jsonpickle
+import pickle
 
 sys.path.append('D:/Users/David/Documents/Work/University/Year 4/Honours/SADFace/tools/python/src/sadface')
 
-import sadface as sf 
+import sadface as sf
 
-def renderSADFace(sentences):
+def renderSADFace(output):
     testAtom1 = "Due to the poor weather"
     testAtom2 = "the badminton match was cancelled"
     testAtom3 = "support"
@@ -23,3 +25,13 @@ def renderSADFace(sentences):
     arg1 = sf.add_argument(con_text=con1, prem_text=prem1, con_id=None, prem_id=None)
 
     return sf.prettyprint()
+
+def renderJSON(output):
+    jsonOutput = jsonpickle.encode(output) 
+    print(jsonOutput)
+    return jsonOutput
+
+def renderPickle(output):
+    pickleOutput = pickle.dumps(output)
+    return pickleOutput
+

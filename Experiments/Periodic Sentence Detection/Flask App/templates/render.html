@@ -1,5 +1,5 @@
-<link rel="icon" type="image/png" href="/static/pickaxe.png" />
-<link rel="stylesheet" href="/static/render.css" type="text/css">
+<link rel="icon" type="image/png" href="/static/assets/pickaxe.png" />
+<link rel="stylesheet" href="/static/CSS/render.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 <!--<nav class="smallNav">
 	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
@@ -24,7 +24,7 @@
 	</div>
 {% endif %}
 <nav {% if textType != "URL" %} style="margin-top: 0" {% endif %}>
-	<a id="homeButton" href="./home"><img src="/static/home.png"></a>
+	<a id="homeButton" href="./home"><img src="/static/assets/home.png"></a>
 	<button active='true' class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
 	<button active='false' class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
 	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
@@ -47,14 +47,14 @@
 		<div id="sentenceNav">
 			<p id="dotsOn" class="counter">1 of x</p>
 			<div id="navigation">
-				<img enabled='false' id="prevSentence" onclick="prevSentence()" src="/static/left-arrow-green.png"/>	
+				<img enabled='false' id="prevSentence" onclick="prevSentence()" src="/static/assets/left-arrow-green.png"/>	
 				<div id="dots">
 					{% for sentence in output.sentences %}
 						<div class="sentenceDot" onclick="sentenceSet({{loop.index0}})"></div>
 					{% endfor %}
 				</div>
 				<p id="dotsOff" class="counter">1 of x</p>
-				<img enabled='true' id="nextSentence" onclick="nextSentence()" src="static/right-arrow-green.png"/>
+				<img enabled='true' id="nextSentence" onclick="nextSentence()" src="static/assets/right-arrow-green.png"/>
 			</div>
 		</div>	
 		{% for sentence in output.sentences %}
@@ -139,19 +139,19 @@ function sentenceSet(index){
 
 function changeButtons(){
 	if(sentenceID > 0){
-		document.getElementById('prevSentence').src = "/static/left-arrow-blue.png";
+		document.getElementById('prevSentence').src = "/static/assets/left-arrow-blue.png";
 		document.getElementById('prevSentence').setAttribute('enabled', 'true');
 	}
 	else{
-		document.getElementById('prevSentence').src = "/static/left-arrow-grey.png";
+		document.getElementById('prevSentence').src = "/static/assets/left-arrow-grey.png";
 		document.getElementById('prevSentence').setAttribute('enabled', 'false');
 	}
 	if(sentenceID < sentences.length-1){
-		document.getElementById('nextSentence').src = "/static/right-arrow-blue.png";
+		document.getElementById('nextSentence').src = "/static/assets/right-arrow-blue.png";
 		document.getElementById('nextSentence').setAttribute('enabled', 'true');
 	}
 	else{
-		document.getElementById('nextSentence').src = "/static/right-arrow-grey.png";
+		document.getElementById('nextSentence').src = "/static/assets/right-arrow-grey.png";
 		document.getElementById('nextSentence').setAttribute('enabled', 'false');
 	}
 	
@@ -179,7 +179,7 @@ function initialisePage(){
 		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
 	}
 
-	document.getElementById('prevSentence').src = "/static/left-arrow-grey.png";
-	document.getElementById('nextSentence').src = "/static/right-arrow-blue.png";
+	document.getElementById('prevSentence').src = "/static/assets/left-arrow-grey.png";
+	document.getElementById('nextSentence').src = "/static/assets/right-arrow-blue.png";
 }
 </script>
