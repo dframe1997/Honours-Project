@@ -53,7 +53,7 @@ nav{
     justify-self: flex-end;
     justify-content: space-around;
     flex-wrap: wrap;
-    background-image: linear-gradient(to bottom right, #07ebfe, #4ab0fe);
+    background: linear-gradient(to right, #24d2fe, #44b5fe);
     margin-top: -39px;
     position: sticky;
     top: 0;

@@ -1,6 +1,7 @@
 #Functions to detect periodic sentences
 from Canary import SentenceFormat, helperFunctions
 import nltk
+import time
 from nltk.tokenize import sent_tokenize
 from nltk.tree import ParentedTree
 import sys
@@ -25,6 +26,9 @@ def startingWords(sentence, debug):
 
 def treeStructure(sentence, debug, parserTool):
     #Based on characterizing stylistic elements
+    #while parserTool == None:
+        #time.sleep(1)
+        #print("Waiting for parser to load before creating tree.")
     treeStringWBrackets = parserTool.parse(sentence.text)
     treeString = treeStringWBrackets[1:len(treeStringWBrackets)-1]
     #parserTool.terminate() #End the parser process to save memory

@@ -2,6 +2,7 @@ from newspaper import Article
 from Canary import SentenceFormat, OutputFormat
 import nltk
 from nltk.tokenize import sent_tokenize
+from string import printable
 
 nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\NLTK")
 
@@ -24,13 +25,16 @@ def splitSentences(text):
     sentenceObjectList = []
     sentenceTextList = sent_tokenize(text)
     for sentenceText in sentenceTextList:
+        sentenceText = ''.join(char for char in sentenceText if char in printable) #Remove hidden characters
+        sentenceText = sentenceText.replace('\n', ' ').replace('\r', '')
+
         tokens = nltk.word_tokenize(sentenceText)
 
         tagged = nltk.pos_tag(tokens)
 
-        entities = nltk.chunk.ne_chunk(tagged)
+        tree = None
 
-        newSentence = SentenceFormat.SentenceObject(sentenceText, tokens, tagged, entities)
+        newSentence = SentenceFormat.SentenceObject(sentenceText, tokens, tagged, tree)
         sentenceObjectList.append(newSentence)
     return sentenceObjectList
 

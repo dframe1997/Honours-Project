@@ -4,6 +4,7 @@ import time
 from flask import render_template, url_for, request, redirect, abort, json, flash
 from Canary import ProcessInput, OutputFormat, periodic, ProcessOutput
 import sys
+from threading import Thread
 
 sys.path.insert(0, '../../../../perkeleyparser')
 
@@ -18,9 +19,28 @@ app.config["DEBUG"] = True
 
 nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\NLTK")
 
-parserIsTerminated = False
+parserIsTerminated = True
 
-parserTool = parser(berkeleyPath, grammarPath, arguments)
+parserTool = None
+
+fromHomePage = False
+
+def reloadParser():
+    global parserIsTerminated
+    global parserTool
+    global arguments
+
+    if parserIsTerminated:
+        print("Loading parser")
+        parserTool = parser(berkeleyPath, grammarPath, arguments)
+
+    parserIsTerminated = False
+    
+    print("Parser loaded.")
+
+#Cache the parser using a thread after server load, allows server to load immediatley
+parserReloadThread = Thread(target=reloadParser)
+parserReloadThread.start()
 
 @app.route('/', methods=['GET'])
 def API():
@@ -32,11 +52,17 @@ def API():
     start = time.time()
     periodicScore = 0
     notPeriodicScore = 0
-    #global parserIsTerminated
-    #global parserTool
+    global parserIsTerminated
+    global parserReloadThread
+    global parserTool
+    
+    if not parserReloadThread.isAlive():
+        parserReloadThread = Thread(target=reloadParser)
+        parserReloadThread.start()
 
-    #if parserIsTerminated:
-        #parserTool = parser(berkeleyPath, grammarPath)
+    parserReloadThread.join()
+
+    fromHomePage = False
 
     if textType == "Test":
         allNewSentences = []
@@ -64,8 +90,8 @@ def API():
     else:
         plural = ""
     
-    #parserTool.terminate()
-    #parserIsTerminated = True
+    parserTool.terminate()
+    parserIsTerminated = True
 
     output.summary += "\n" + str(numPeriodic) + " periodic sentence" + plural + " detected."
     end = time.time()
@@ -73,7 +99,7 @@ def API():
     if textType == "Test":
         return render_template('test.html', output=output, periodicScore=periodicScore, notPeriodicScore=notPeriodicScore, debug=debug, runtime=str(round(end - start)))
     elif outputFormat == 'html':
-        return render_template('render.html', output=output, debug=debug, runtime=str(round(end - start)))
+        return render_template('render.html', output=output, debug=debug, textType=textType, runtime=str(round(end - start)))
     elif outputFormat == 'sadface':
         return ProcessOutput.renderSADFace(output.sentences)
     else:
@@ -92,19 +118,27 @@ def Home():
 
         return redirect(url_for('.API', text=text, textType=textType, debug=debug, argument=argument, outputFormat=outputFormat))
     else:
+        global parserIsTerminated
+        global parserReloadThread
+
+        if not parserReloadThread.isAlive():
+            parserReloadThread = Thread(target=reloadParser)
+            parserReloadThread.start()
         return render_template('home.html')
+        
 
 @app.route('/render', methods=['GET'])
 def Render():
-    output = request.form['output']
-    debug = request.form['debug']
-    runtime = request.form['runtime']
+    output = request.args['output']
+    debug = request.args['debug']
+    runtime = request.args['runtime']
+    textType = request.args['textType']
     return render_template('render.html', output=output, debug=debug, runtime=runtime)
 
 @app.route('/test', methods=['GET'])
 def Test():
-    output = request.form['output']
-    debug = request.form['debug']
-    runtime = request.form['runtime']
+    output = request.args['output']
+    debug = request.args['debug']
+    runtime = request.args['runtime']
     return render_template('test.html', output=output, debug=debug, runtime=runtime)
 app.run()
