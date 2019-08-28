@@ -24,6 +24,9 @@ def splitSentences(text):
     #Splitting the article into sentences     
     sentenceObjectList = []
     sentenceTextList = sent_tokenize(text)
+    if not sentenceTextList:
+        sentenceTextList = [text]
+        print("Saved the day")
     for sentenceText in sentenceTextList:
         sentenceText = ''.join(char for char in sentenceText if char in printable) #Remove hidden characters
         sentenceText = sentenceText.replace('\n', ' ').replace('\r', '')
@@ -45,43 +48,31 @@ def processURL(url):
     article.nlp()
     sentences = splitSentences(article.text)
 
-    output = OutputFormat.Output(url, article.title, article.authors, article.publish_date, article.top_image, article.movies, article.text, article.keywords, article.summary, sentences)
+    output = OutputFormat.Output(url, article.title, article.authors, article.publish_date, article.top_image, article.movies, article.text, article.keywords, article.summary, 0, sentences)
     return output
 
 def process(text, textType):
     if textType == "URL":
         output = processURL(text)
         return output
-    #else if textType == "test":
-        #sentencesText = openFile("Dataset/Periodic.txt")
-        #sentences = splitSentences(sentencesText)
-        #score = periodic.detectPeriodic(sentences, debug, "Periodic") #The first test will check the periodic sentences
-        #print(str(score) + "% of periodic sentences correctly identified.")
-        #print("_________________________________________________")
-        #sentencesText = openFile("Dataset/notPeriodic.txt")
-        #sentences = splitSentences(sentencesText)
-        #score = detectPeriodic(inputContent, debug, "NotPeriodic") #The first test will check the periodic sentences
-        #print(str(score) + "% of not-periodic sentences correctly identified.")
     elif textType == "File":
         if text == "":
             text = "Input.txt"
         sentencesText = openFile(text)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish Date Unknown", "top_image", "movies", sentencesText, "keywords", "", sentences)
+        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     elif textType == "Periodic":
         sentencesText = openFile("D:/Users/David/Documents/Work/University/Year 4/Honours/Honours-Project/Experiments/Periodic Sentence Detection/Dataset/Periodic.txt", True)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish Date Unknown", "top_image", "movies", sentencesText, "keywords", "", sentences)
+        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     elif textType == "NotPeriodic":
         sentencesText = openFile("D:/Users/David/Documents/Work/University/Year 4/Honours/Honours-Project/Experiments/Periodic Sentence Detection/Dataset/NotPeriodic.txt", True)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish Date Unknown", "top_image", "movies", sentencesText, "keywords", "", sentences)
+        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     else:
-        if text == "":
-            text = "No text provided."
         sentences = splitSentences(text)
-        output = OutputFormat.Output(text, "Input from webpage", "No author specified", "Publish Date Unknown", "top_image", "movies", text, "keywords", "", sentences)
+        output = OutputFormat.Output(text, "Input from webpage", "No author specified", "Publish date unknown", "top_image", "movies", text, "No keywords found", "", 0, sentences)
         return output

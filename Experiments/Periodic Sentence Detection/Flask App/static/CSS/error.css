@@ -1,0 +1,13 @@
+body{
+    background: linear-gradient(to bottom right, #07ebfe, #4ab0fe);
+    color: white;
+    font-family: nunito;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+a{
+    color: white;
+}

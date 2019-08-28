@@ -1,5 +1,7 @@
 <link rel="icon" type="image/png" href="/static/assets/pickaxe.png" />
 <link rel="stylesheet" href="/static/CSS/render.css" type="text/css">
+<link rel="stylesheet" href="/static/CSS/loading.css" type="text/css">
+<link rel="stylesheet" href="/static/CSS/scrollbar.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 <!--<nav class="smallNav">
 	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
@@ -8,37 +10,47 @@
 	<button class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
 </nav>-->
 <title>Pickaxe</title>
-{% if textType == "URL" %}
-	<div id="topSection">
-		<header>
-			<div class="headline">
-				<p class="source">
-					Sourced from <a href={{output.url}}>{{ output.url }}</a>
-				</p>
-				<h1>{{ output.title }}</h1>
-			</div>
-			<div class="imgContainer">
-				<img src="{{ output.topImage }}"/>
-			</div>	
-		</header>
-	</div>
-{% endif %}
 <nav {% if textType != "URL" %} style="margin-top: 0" {% endif %}>
 	<a id="homeButton" href="./home"><img src="/static/assets/home.png"></a>
 	<button active='true' class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
-	<button active='false' class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
 	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
 	<button active='false'class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
 </nav>
 <div id="mainContent">
 	<div id="summary" class="tab">
-		<p>{{ output.summary }}</p>
-	</div>
-	<div id="details" class="tab">
-		<p>Author(s): {{ output.author }}</p>
-		<p>Publish Date: {{ output.publishDate }}</p>
-		<p>Keywords: {{ output.keywords }}</p>
-		<p>Run Time: {{runtime}} seconds</p>
+		{% if textType == "URL" %}
+		<div id="topSection">
+			<header>
+				<div class="headline">
+					<h1>{{ output.title }}</h1>
+				</div>
+				<div class="imgContainer">
+					<img id="headerImage" src="{{ output.topImage }}"/>
+				</div>	
+			</header>
+		</div>
+		{% endif %}
+		<h3>{{ output.numPeriodic }}</h3>
+		<div id="sentenceSummaryContainer">
+			{% for sentence in output.sentences if sentence.periodic == True %}
+			<div class="summaryDetails">
+				<p>{{ sentence.text }}</p>
+			</div>			
+			{% endfor %}
+		</div>
+		{% if textType == "URL"  %}
+			<h3>Article details</h3>
+			<p class="summaryDetails">Sourced from <a href={{output.url}}>{{ output.url }}</a></p>
+			<p class="summaryDetails">Author(s): {{ output.author }}</p>
+			<p class="summaryDetails">Publish Date: {{ output.publishDate }}</p>
+			<p class="summaryDetails">Keywords: {{ output.keywords }}</p>
+		{% endif %}
+		{% if output.summary != "" %}
+			<h3>Article overview</h3>
+			<p class="summaryDetails">{{ output.summary }}</p>
+		{% endif %}
+		<h3>Technical Details</h3>
+		<p class="summaryDetails">Run Time: {{runtime}} seconds</p>
 	</div>
 	<article id="article" class="tab">
 		<p>{{ output.text }}</p>
@@ -50,7 +62,7 @@
 				<img enabled='false' id="prevSentence" onclick="prevSentence()" src="/static/assets/left-arrow-green.png"/>	
 				<div id="dots">
 					{% for sentence in output.sentences %}
-						<div class="sentenceDot" onclick="sentenceSet({{loop.index0}})"></div>
+						<div class="sentenceDot" {% if sentence.periodic == True %} style="border: 2px solid white" {% endif %} onclick="sentenceSet({{loop.index0}})"></div>
 					{% endfor %}
 				</div>
 				<p id="dotsOff" class="counter">1 of x</p>
@@ -72,6 +84,13 @@
 	</div>
 	<div id="footer">Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>, <a href="https://www.google.com/" title="Google">Google</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 </div>
+<div id="loading">
+	<div id="spinner">
+		<img id="pickaxe" src="/static/assets/pickaxe.png"/>
+	</div>
+</div>
+
+<script type="text/javascript" src="../static/JavaScript/loadingScreen.js"></script>
 <script>
 //Variables
 sentenceID = 0;
@@ -86,7 +105,7 @@ window.onload = initialisePage();
 window.onload = openTab('summary');
 
 function dotModeCheck(){
-	if(sentences.length >= 20){
+	if(sentences.length >= 50){
 		dotMode = false;
 		document.getElementById("dots").style.display = "none";
 		document.getElementById("dotsOn").style.display = "none";

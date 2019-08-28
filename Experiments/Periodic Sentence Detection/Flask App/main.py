@@ -89,7 +89,7 @@ def API():
         output = ProcessInput.process(text, textType)   
         output.sentences, score, numPeriodic = periodic.detectPeriodic(output.sentences, debug, argument, "Unknown", parserTool) #We don't know the nature of the sentences
     
-    if numPeriodic > 1:
+    if numPeriodic > 1 or numPeriodic == 0:
         plural = "s"
     else:
         plural = ""
@@ -97,7 +97,7 @@ def API():
     parserTool.terminate()
     parserIsTerminated = True
 
-    output.summary += "\n" + str(numPeriodic) + " periodic sentence" + plural + " detected."
+    output.numPeriodic = str(numPeriodic) + " periodic sentence" + plural + " detected."
     end = time.time()
     print("Run time: " + str(end - start) + " seconds")
     
@@ -151,4 +151,12 @@ def Test():
     debug = request.args['debug']
     runtime = request.args['runtime']
     return render_template('test.html', output=output, debug=debug, runtime=runtime)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error/404.html'), 404
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('error/500.html'), 500
 app.run()

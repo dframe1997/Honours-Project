@@ -20,8 +20,9 @@ depthIncreaseThreshold = 10
 
 def startingWords(sentence, debug):
     for index in range(prepositionSearchDepth):
-        if sentence.tagged[index][1] == "IN":# or sentence.tagged[index][1] == "WDT" or sentence.tagged[index][1] == "WP" or sentence.tagged[index][1] == "WP$" or sentence.tagged[index][1] == "WRB": #IN represents prepositions or 'subordinating conjunctions' which are often found at the start of a subordinate clause and therefore a periodic sentence
-            return True
+        if len(sentence.tagged) > index:
+            if sentence.tagged[index][1] == "IN":# or sentence.tagged[index][1] == "WDT" or sentence.tagged[index][1] == "WP" or sentence.tagged[index][1] == "WP$" or sentence.tagged[index][1] == "WRB": #IN represents prepositions or 'subordinating conjunctions' which are often found at the start of a subordinate clause and therefore a periodic sentence
+                return True
     return False       
 
 def treeStructure(sentence, debug, parserTool):
@@ -69,9 +70,9 @@ def detectPeriodic(sentences, debug, checkArgument, natureOfSentences, parserToo
         treeStructureIsPeriodic = False
         if debug == "True":
             print(sentence.text)
-            #print(sentence.tokens)
-            #print(sentence.tagged)
-            #print(sentence.entities)
+            print(sentence.tokens)
+            print(sentence.tagged)
+            print(sentence.entities)
         #sentence.entities.draw()
         if startingWords(sentence, debug):
             startingWordImpliesArgument = True

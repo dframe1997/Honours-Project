@@ -1,3 +1,7 @@
+html{
+    overflow: hidden;
+}
+
 body{
     width: 100%;
     margin: 0;
@@ -8,8 +12,8 @@ body{
     flex-direction: column;
 }
 
-img{
-    width: 330px;
+#headerImage{
+    height: 150px;
     border-radius: 10px;
 }
 
@@ -17,11 +21,10 @@ img{
     margin: 0;
     display: flex;
     flex-grow: 3;
-    color: white;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 30px;
+    padding: 0 30px 10px 30px;
 }
 
 .headline h1{
@@ -39,13 +42,12 @@ header{
     display: flex;
     width: 100%;
     text-align: left;
-    background-image: linear-gradient(to bottom right, #07ebfe, #4ab0fe);
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 .imgContainer{
-    padding: 50px;
-    padding-right: 30px;
-    padding-left: 30px;
+    padding: 0 30px 10px 30px;
     text-align: end;
 }
 
@@ -54,7 +56,6 @@ nav{
     justify-content: space-around;
     flex-wrap: wrap;
     background: linear-gradient(to right, #24d2fe, #44b5fe);
-    margin-top: -39px;
     position: sticky;
     top: 0;
     display: flex;
@@ -69,8 +70,7 @@ nav button, nav a{
     font-size: 15px;
     cursor: pointer;
     font-family: nunito;
-    padding-top: 1%;
-    padding-bottom: 1%;
+    padding: 10px;
     flex-grow: 1;
 }
 
@@ -93,6 +93,8 @@ button:focus {
     justify-content: space-between;
     padding: 30px;
     text-align: justify;
+    overflow: auto;
+    height: calc(100vh - 90px);
 }
 
 #homeButton img{
@@ -140,6 +142,7 @@ p{
     height: 15px;
     cursor: pointer;
     border-radius: 100%;
+    box-sizing: border-box;
 }
 
 .sentenceDot, #nextSentence, #prevSentence{
@@ -148,4 +151,29 @@ p{
 
 #footer{
     text-align: center;
+    margin-top: 10px;
+}
+
+.summaryDetails{
+    background: #3c3c3c;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0px 5px 0px;
+}
+
+.summaryDetails a{
+    color: white;
+}
+
+h3{
+    text-align: center;
+    background: linear-gradient(to right, #24d2fe, #44b5fe);
+    color: white;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+h3:first-child{
+    margin-top: 0;
 }
