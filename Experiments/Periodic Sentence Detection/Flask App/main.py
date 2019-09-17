@@ -105,7 +105,7 @@ def API():
         if textType == "Test":
             return render_template('test.html', output=output, periodicScore=periodicScore, notPeriodicScore=notPeriodicScore, debug=debug, runtime=str(round(end - start)))
         else:
-            return render_template('render.html', output=output, debug=debug, textType=textType, runtime=str(round(end - start)))
+            return render_template('render.html', output=output, debug=debug, textType=textType, argument=argument, runtime=str(round(end - start)))
     elif outputFormat == 'sadface':
         return ProcessOutput.renderSADFace(output)
     elif outputFormat == 'json':

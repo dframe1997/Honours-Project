@@ -53,12 +53,13 @@ header{
 
 nav{
     justify-self: flex-end;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    background: linear-gradient(to right, #24d2fe, #44b5fe);
+    background: white;
     position: sticky;
     top: 0;
     display: flex;
+    box-shadow: 4px 2px 8px 0px #00000017;
 }
 
 nav button, nav a{
@@ -67,7 +68,7 @@ nav button, nav a{
     border: 0;
     border-bottom: 3px red solid;
     border-bottom-color: rgba(255,255,255,0);
-    font-size: 15px;
+    font-size: 18px;
     cursor: pointer;
     font-family: nunito;
     padding: 10px;
@@ -75,11 +76,16 @@ nav button, nav a{
 }
 
 nav button:hover, nav a:hover{
-    border-bottom-color: rgba(255,255,255,0.8);
+    background: linear-gradient(20deg, #0debfe, #48b1fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 nav button[active='true']{
-    border-bottom-color: rgba(255,255,255,1);
+    background: linear-gradient(20deg, #0debfe, #48b1fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
 }
 
 button:focus {
@@ -102,7 +108,9 @@ button:focus {
 }
 
 p{
-    margin: 0;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0px 5px 0px;
 }
 
 #sentenceNav{
@@ -125,16 +133,7 @@ p{
 #dots, #navigation{
     display: flex;
     flex-wrap: wrap;
-}
-
-#nextSentence, #prevSentence{
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
-}
-
-#nextSentence[enabled='false'], #prevSentence[enabled='false']{
-    cursor: default;
+    align-items: center;
 }
 
 .sentenceDot{
@@ -155,11 +154,17 @@ p{
 }
 
 .summaryDetails{
-    background: #3c3c3c;
-    color: white;
+    background: white;
+    color: black;
     border-radius: 5px;
     padding: 10px;
-    margin: 5px 0px 5px 0px;
+    width: 80vw;
+    height: 10vh;
+    margin: 5px;
+    box-shadow: 2px 2px 7px 0px #00000014;
+    display: none;
+    align-items: center;
+    justify-content: center;
 }
 
 .summaryDetails a{
@@ -168,12 +173,54 @@ p{
 
 h3{
     text-align: center;
-    background: linear-gradient(to right, #24d2fe, #44b5fe);
-    color: white;
-    border-radius: 50px;
+    background: linear-gradient(20deg, #0debfe, #48b1fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     padding: 10px;
+    font-size: 40px;
 }
 
-h3:first-child{
+h1{
     margin-top: 0;
+    text-align: center;
+    font-size: 30px;
+    background: linear-gradient(20deg, #0debfe, #48b1fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#sentenceSummaryContainer{
+    display: flex;
+    overflow: auto;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#numPeriodic{
+    font-size: 60px;
+}
+
+.arrowButton{
+    width: 15px;
+    height: 15px;
+    cursor: default;
+    color: grey;
+    border: 2px solid grey;
+    border-radius: 100%;
+    background: transparent;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.arrowButton[active="true"]{
+    cursor: pointer;
+    color: #48b1fe;
+    border: 2px solid #48b1fe;
+}
+
+.arrowButton[active="true"]:hover{
+    color: white;
+    background: #48b1fe;
 }

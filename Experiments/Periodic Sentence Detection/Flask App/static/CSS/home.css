@@ -22,6 +22,8 @@ body{
 
 form{
     display: flex;
+    height: 90vh;
+    margin: 2.5vh;
 }
 
 input, select, textarea{
@@ -60,7 +62,14 @@ form label{
 #textField, #options{
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
 }
+
+.inputAndLabel{
+    display: flex;
+    flex-direction: column;
+}
+
 form, #textfield{
     width: 100%;
 }
@@ -72,4 +81,9 @@ textarea{
     text-align-last: left;
     padding: 20px;
     resize: none;
+}
+
+h1{
+    height: 3vh;
+    margin: 1vh;
 }

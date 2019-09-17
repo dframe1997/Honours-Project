@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="/static/CSS/home.css" type="text/css">
 <link rel="stylesheet" href="/static/CSS/loading.css" type="text/css">
 <link rel="stylesheet" href="/static/CSS/scrollbar.css" type="text/css">
+<script src="https://kit.fontawesome.com/ea8a3d1209.js"></script>
 <title>Pickaxe</title>
 <h1>Welcome to Pickaxe</h1>
 <form method="post" name="form" action="" id="form">
@@ -10,29 +11,37 @@
         <textarea name="text" class="droparea" id="text"></textarea>       
     </div>
     <div id="options">
-        <label>Select the type of input you are using</label>
-        <select name="textType" id="textType"/>
-            <option value="Text">Text</option>
-            <option value="URL">URL</option>
-            <option value="Test">Test</option>
-        </select>
-        <label>Run in debug mode?</label>
-        <select name="debug" id="debug"/>
-            <option value="False">No</option>
-            <option value="True">Yes</option>
-        </select>
-        <label>Check if argument?</label>
-        <select name="argument" id="argument"/>
-            <option value="False">No</option>
-            <option value="True">Yes</option>
-        </select>
-        <label>Select your preferred output type</label>
-        <select name="outputFormat" id="outputFormat"/>
-            <option value="html">HTML Webpage (Interactive)</option>
-            <option value="pickle">Pickle (For Python projects)</option>
-            <option value="json">JSON (For other languages)</option>
-            <!-- NOT IMPLEMENTED <option value="sadface">SADFace (For argument mining)</option> -->
-        </select>
+        <div class="inputAndLabel">
+            <label>Select the type of input you are using</label>
+            <select name="textType" id="textType"/>
+                <option value="Text">Text</option>
+                <option value="URL">URL</option>
+                <option value="Test">Test</option>
+            </select>
+        </div>
+        <div class="inputAndLabel">
+            <label>Run in debug mode?</label>
+            <select name="debug" id="debug"/>
+                <option value="False">No</option>
+                <option value="True">Yes</option>
+            </select>
+        </div>
+        <div class="inputAndLabel">
+            <label>Check if argument?</label>
+            <select name="argument" id="argument"/>
+                <option value="False">No</option>
+                <option value="True">Yes</option>
+            </select>
+        </div>
+        <div class="inputAndLabel">
+            <label>Select your preferred output type</label>
+            <select name="outputFormat" id="outputFormat"/>
+                <option value="html">HTML Webpage (Interactive)</option>
+                <option value="pickle">Pickle (For Python projects)</option>
+                <option value="json">JSON (For other languages)</option>
+                <!-- NOT IMPLEMENTED <option value="sadface">SADFace (For argument mining)</option> -->
+            </select>
+        </div>
         <input type="submit" name="submit" id="submit" value="Start Mining" onclick="load()"/>
     </div>
 </form>

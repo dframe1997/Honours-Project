@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="/static/CSS/loading.css" type="text/css">
 <link rel="stylesheet" href="/static/CSS/scrollbar.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+<script src="https://kit.fontawesome.com/ea8a3d1209.js"></script>
 <!--<nav class="smallNav">
 	<button class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
 	<button class="tabButton" id="detailsButton" onclick="openTab('details')">Processed Details</button>
@@ -11,13 +12,38 @@
 </nav>-->
 <title>Pickaxe</title>
 <nav {% if textType != "URL" %} style="margin-top: 0" {% endif %}>
-	<a id="homeButton" href="./home"><img src="/static/assets/home.png"></a>
+	<a id="homeButton" href="./home"><img src="/static/assets/pickaxe.png"></a>
 	<button active='true' class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
-	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Article Text</button>
-	<button active='false'class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentences</button>
+	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Full Text</button>
+	<button active='false'class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentence Breakdown</button>
 </nav>
 <div id="mainContent">
 	<div id="summary" class="tab">
+		<h1 id="numPeriodic">{{ output.numPeriodic }}</h1>
+		<div id="sentenceSummaryContainer">
+			<i enabled='false' id="prevSumSentence" onclick="prevSentence()" class="arrowButton fas fa-chevron-left"></i>
+			{% for sentence in output.sentences if sentence.periodic == True %}
+				<div class="summarySentence summaryDetails" id="{{loop.index0}}">
+					<p>{{ sentence.text }}</p>
+				</div>					
+			{% endfor %}
+			<i enabled='true' id="nextSumSentence" onclick="nextSentence()" class="arrowButton fas fa-chevron-right"></i>
+		</div>
+		{% if textType == "URL"  %}
+			<h3>Article details</h3>
+			<p>Sourced from <a href={{output.url}}>{{ output.url }}</a></p>
+			<p>Author(s): {{ output.author }}</p>
+			<p>Publish Date: {{ output.publishDate }}</p>
+			<p>Keywords: {{ output.keywords }}</p>
+		{% endif %}
+		{% if output.summary != "" %}
+			<h3>Article overview</h3>
+			<p>{{ output.summary }}</p>
+		{% endif %}
+		<h3>Technical Details</h3>
+		<p>Run Time: {{runtime}} seconds</p>
+	</div>
+	<article id="article" class="tab">
 		{% if textType == "URL" %}
 		<div id="topSection">
 			<header>
@@ -30,55 +56,35 @@
 			</header>
 		</div>
 		{% endif %}
-		<h3>{{ output.numPeriodic }}</h3>
-		<div id="sentenceSummaryContainer">
-			{% for sentence in output.sentences if sentence.periodic == True %}
-			<div class="summaryDetails">
-				<p>{{ sentence.text }}</p>
-			</div>			
-			{% endfor %}
-		</div>
-		{% if textType == "URL"  %}
-			<h3>Article details</h3>
-			<p class="summaryDetails">Sourced from <a href={{output.url}}>{{ output.url }}</a></p>
-			<p class="summaryDetails">Author(s): {{ output.author }}</p>
-			<p class="summaryDetails">Publish Date: {{ output.publishDate }}</p>
-			<p class="summaryDetails">Keywords: {{ output.keywords }}</p>
-		{% endif %}
-		{% if output.summary != "" %}
-			<h3>Article overview</h3>
-			<p class="summaryDetails">{{ output.summary }}</p>
-		{% endif %}
-		<h3>Technical Details</h3>
-		<p class="summaryDetails">Run Time: {{runtime}} seconds</p>
-	</div>
-	<article id="article" class="tab">
 		<p>{{ output.text }}</p>
 	</article>
 	<div id="sentences" class="tab">
 		<div id="sentenceNav">
 			<p id="dotsOn" class="counter">1 of x</p>
 			<div id="navigation">
-				<img enabled='false' id="prevSentence" onclick="prevSentence()" src="/static/assets/left-arrow-green.png"/>	
+				<i enabled='false' id="prevSentence" onclick="prevSentence()" class="arrowButton fas fa-chevron-left"></i>
 				<div id="dots">
 					{% for sentence in output.sentences %}
 						<div class="sentenceDot" {% if sentence.periodic == True %} style="border: 2px solid white" {% endif %} onclick="sentenceSet({{loop.index0}})"></div>
 					{% endfor %}
 				</div>
 				<p id="dotsOff" class="counter">1 of x</p>
-				<img enabled='true' id="nextSentence" onclick="nextSentence()" src="static/assets/right-arrow-green.png"/>
+				<i enabled='true' id="nextSentence" onclick="nextSentence()" class="arrowButton fas fa-chevron-right"></i>
 			</div>
 		</div>	
 		{% for sentence in output.sentences %}
 		<div class="sentence" id="{{loop.index0}}">
-			<p>Sentence Text: {{ sentence.text }}</p>
+			<p>{{ sentence.text }}</p>
+			<h3>The sentence is {% if sentence.periodic == False %} not {% endif %}periodic.</h3>
 			{% if debug == "True" %}
-				<p>Sentence Tokens: {{ sentence.tokens }}</p>
-				<p>Sentence Tagged: {{ sentence.tagged }}</p>
-				<p>Sentence Entities: {{ sentence.entities }}</p>
+				<h3>Sentence Tokens</h3>
+				<p>{{ sentence.tokens }}</p>
+				<h3>Sentence Tagged</h3>
+				<p>{{ sentence.tagged }}</p>
+				<h3>Sentence Tree</h3>
+				<p>{{ sentence.entities }}</p>
 			{% endif %}
-			<p>Periodic: {{ sentence.periodic }}</p>
-			<p>Argument: {{ sentence.argument }}</p>
+			{% if argument == "True" %}<h2>This sentence is {% if sentence.argument == False %} not {% endif %}an argument.</h2>{% endif %}
 		</div>			
 		{% endfor %}	
 	</div>
@@ -92,12 +98,15 @@
 
 <script type="text/javascript" src="../static/JavaScript/loadingScreen.js"></script>
 <script>
+
 //Variables
 sentenceID = 0;
+var summarySentences = document.getElementsByClassName("summarySentence");
 var sentences = document.getElementsByClassName("sentence");
 var sentenceDots = document.getElementsByClassName("sentenceDot");
 dotMode = true;
 counters = document.getElementsByClassName('counter');
+activeTab = "summary";
 
 dotModeCheck();
 
@@ -120,32 +129,59 @@ function openTab(tabName) {
   	var tabButtons = document.getElementsByClassName("tabButton");
 	for (var i = 0; i < tabs.length; i++) {
   	  tabs[i].style.display = "none"; 
-		tabButtons[i].style.color = "rgba(255,255,255,0.5)";
+		tabButtons[i].style.color = "rgba(0,0,0,0.5)";
 		tabButtons[i].setAttribute('active', 'false');
   	}
   	document.getElementById(tabName).style.display = "block"; 
-	document.getElementById(tabName+'Button').style.color = "white";
+	document.getElementById(tabName+'Button').style.color = "black";
 	document.getElementById(tabName+'Button').setAttribute('active', 'true');
+	activeTab = tabName;
+	sentenceID = 0;
+	clearSentences();
+	sentences[sentenceID].style.display = "block";
+	summarySentences[sentenceID].style.display = "flex";
+	if(dotMode) sentenceDots[0].style.background = "rgb(68, 180, 254)";
+	changeButtons();
 }
 
 function nextSentence(){
-	if(sentenceID < sentences.length-1){
-		clearSentences();
-		sentenceID = sentenceID + 1;
-		sentences[sentenceID].style.display = "block";
-		if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";		
-		changeButtons();
-	}	
+	if(activeTab == "summary"){
+		if(sentenceID < summarySentences.length-1){
+			clearSentences();
+			sentenceID = sentenceID + 1;
+			summarySentences[sentenceID].style.display = "flex";		
+			changeButtons();
+		}
+	}
+	else{
+		if(sentenceID < sentences.length-1){
+			clearSentences();
+			sentenceID = sentenceID + 1;
+			sentences[sentenceID].style.display = "block";
+			if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";		
+			changeButtons();
+		}
+	}		
 }
 
 function prevSentence(){
-	if(sentenceID > 0){
-		clearSentences();
-		sentenceID = sentenceID - 1;
-		sentences[sentenceID].style.display = "block";	
-		if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";	
-		changeButtons();
-	}	
+	if(activeTab == "summary"){
+		if(sentenceID > 0){
+			clearSentences();
+			sentenceID = sentenceID - 1;
+			summarySentences[sentenceID].style.display = "flex";	
+			changeButtons();
+		}	
+	} 
+	else {
+		if(sentenceID > 0){
+			clearSentences();
+			sentenceID = sentenceID - 1;
+			sentences[sentenceID].style.display = "block";	
+			if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";	
+			changeButtons();
+		}	
+	}
 }
 
 function sentenceSet(index){
@@ -157,32 +193,47 @@ function sentenceSet(index){
 }
 
 function changeButtons(){
+	sentenceNum = 0;
+	if(activeTab == "sentences"){
+		sentenceNum = sentences.length-1;
+		prevButton = document.getElementById("prevSentence");
+		nextButton = document.getElementById("nextSentence");
+	}
+	else
+	{
+		sentenceNum = summarySentences.length-1;
+		prevButton = document.getElementById("prevSumSentence");
+		nextButton = document.getElementById("nextSumSentence");
+	}
+
 	if(sentenceID > 0){
-		document.getElementById('prevSentence').src = "/static/assets/left-arrow-blue.png";
-		document.getElementById('prevSentence').setAttribute('enabled', 'true');
+		prevButton.setAttribute('active', 'true');
 	}
 	else{
-		document.getElementById('prevSentence').src = "/static/assets/left-arrow-grey.png";
-		document.getElementById('prevSentence').setAttribute('enabled', 'false');
+		prevButton.setAttribute('active', 'false');
 	}
-	if(sentenceID < sentences.length-1){
-		document.getElementById('nextSentence').src = "/static/assets/right-arrow-blue.png";
-		document.getElementById('nextSentence').setAttribute('enabled', 'true');
+
+	if(sentenceID < sentenceNum){
+		nextButton.setAttribute('active', 'true');
 	}
 	else{
-		document.getElementById('nextSentence').src = "/static/assets/right-arrow-grey.png";
-		document.getElementById('nextSentence').setAttribute('enabled', 'false');
+		nextButton.setAttribute('active', 'false');
 	}
 	
-	for(var counter of counters){
-		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
-	}	
+	if(activeTab == "sentences"){
+		for(var counter of counters){
+			counter.innerHTML = sentenceID+1 + " of " + sentences.length;
+		}	
+	}
 }
 
 function clearSentences(){
 	for (var i = 0; i < sentences.length; i++) {
 		sentences[i].style.display = "none"; 
 		if(dotMode) sentenceDots[i].style.background = "grey";
+	}
+	for (var i = 0; i < summarySentences.length; i++) {
+		summarySentences[i].style.display = "none"; 
 	}
 }
 
@@ -197,8 +248,6 @@ function initialisePage(){
 	for(var counter of counters){
 		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
 	}
-
-	document.getElementById('prevSentence').src = "/static/assets/left-arrow-grey.png";
-	document.getElementById('nextSentence').src = "/static/assets/right-arrow-blue.png";
+	changeButtons();
 }
 </script>
