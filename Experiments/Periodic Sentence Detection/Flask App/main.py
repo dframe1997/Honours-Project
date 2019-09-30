@@ -68,6 +68,14 @@ def API():
 
     fromHomePage = False
 
+    if textType == "Auto":
+        if len(text.split()) == 1 and 'http' in text:
+            textType = "URL"
+        elif text == 'test':
+            textType = "Test"
+        else:
+            textType = "Text"
+
     if textType == "Test":
         allNewSentences = []
         output = ProcessInput.process(text, "Periodic") 

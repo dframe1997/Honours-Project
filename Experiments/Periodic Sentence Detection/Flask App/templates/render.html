@@ -16,6 +16,10 @@
 	<button active='true' class="tabButton" id="summaryButton" onclick="openTab('summary')">Summary</button>
 	<button active='false' class="tabButton" id="articleButton" onclick="openTab('article')">Full Text</button>
 	<button active='false'class="tabButton" id="sentencesButton" onclick="openTab('sentences')">Sentence Breakdown</button>
+	<div id="themeButtonContainer">
+		<button id="themeButton" onclick="changeTheme()"></button>
+	</div>
+	
 </nav>
 <div id="mainContent">
 	<div id="summary" class="tab">
@@ -23,25 +27,33 @@
 		<div id="sentenceSummaryContainer">
 			<i enabled='false' id="prevSumSentence" onclick="prevSentence()" class="arrowButton fas fa-chevron-left"></i>
 			{% for sentence in output.sentences if sentence.periodic == True %}
-				<div class="summarySentence summaryDetails" id="{{loop.index0}}">
+				<div class="summarySentence" id="{{loop.index0}}">
 					<p>{{ sentence.text }}</p>
 				</div>					
 			{% endfor %}
 			<i enabled='true' id="nextSumSentence" onclick="nextSentence()" class="arrowButton fas fa-chevron-right"></i>
 		</div>
 		{% if textType == "URL"  %}
+		<div class="summaryDetails">
 			<h3>Article details</h3>
-			<p>Sourced from <a href={{output.url}}>{{ output.url }}</a></p>
-			<p>Author(s): {{ output.author }}</p>
-			<p>Publish Date: {{ output.publishDate }}</p>
-			<p>Keywords: {{ output.keywords }}</p>
+			<div>
+				<p>Sourced from <a href={{output.url}}>{{ output.url }}</a></p>
+				<p>Author(s): {{ output.author }}</p>
+				<p>Publish Date: {{ output.publishDate }}</p>
+				<p>Keywords: {{ output.keywords }}</p>
+			</div>
+		</div>
 		{% endif %}
 		{% if output.summary != "" %}
+		<div class="summaryDetails">
 			<h3>Article overview</h3>
 			<p>{{ output.summary }}</p>
+		</div>
 		{% endif %}
-		<h3>Technical Details</h3>
-		<p>Run Time: {{runtime}} seconds</p>
+		<div class="summaryDetails">	
+			<h3>Technical Details</h3>
+			<p>Run Time: {{runtime}} seconds</p>
+		</div>
 	</div>
 	<article id="article" class="tab">
 		{% if textType == "URL" %}
@@ -60,31 +72,42 @@
 	</article>
 	<div id="sentences" class="tab">
 		<div id="sentenceNav">
-			<p id="dotsOn" class="counter">1 of x</p>
+			<p class="counter">1 of x</p>
 			<div id="navigation">
 				<i enabled='false' id="prevSentence" onclick="prevSentence()" class="arrowButton fas fa-chevron-left"></i>
 				<div id="dots">
 					{% for sentence in output.sentences %}
-						<div class="sentenceDot" {% if sentence.periodic == True %} style="border: 2px solid white" {% endif %} onclick="sentenceSet({{loop.index0}})"></div>
+						<div class="sentenceDot {% if sentence.periodic == True %} dotBorder {% endif %}" onclick="sentenceSet({{loop.index0}})"></div>
 					{% endfor %}
 				</div>
-				<p id="dotsOff" class="counter">1 of x</p>
 				<i enabled='true' id="nextSentence" onclick="nextSentence()" class="arrowButton fas fa-chevron-right"></i>
 			</div>
 		</div>	
 		{% for sentence in output.sentences %}
 		<div class="sentence" id="{{loop.index0}}">
-			<p>{{ sentence.text }}</p>
-			<h3>The sentence is {% if sentence.periodic == False %} not {% endif %}periodic.</h3>
-			{% if debug == "True" %}
-				<h3>Sentence Tokens</h3>
+			<div class="summaryDetails">
+				<h3>Text</h3>
+				<p>{{ sentence.text }}</p>
+			</div>
+			<div class="summaryDetails">
+				<h3>Analysis</h3>
+				<div>
+					<p>The sentence is {% if sentence.periodic == False %} not {% endif %}periodic.</p>
+					{% if argument == "True" %}<p>The sentence is {% if sentence.argument == False %} not {% endif %}an argument.</p>{% endif %}
+				</div>
+			</div>
+			<div class="summaryDetails">
+				<h3>Tokens</h3>
 				<p>{{ sentence.tokens }}</p>
-				<h3>Sentence Tagged</h3>
+			</div>
+			<div class="summaryDetails">
+				<h3>Tags</h3>
 				<p>{{ sentence.tagged }}</p>
-				<h3>Sentence Tree</h3>
+			</div>
+			<div class="summaryDetails">
+				<h3>Tree</h3>
 				<p>{{ sentence.entities }}</p>
-			{% endif %}
-			{% if argument == "True" %}<h2>This sentence is {% if sentence.argument == False %} not {% endif %}an argument.</h2>{% endif %}
+			</div>
 		</div>			
 		{% endfor %}	
 	</div>
@@ -104,43 +127,28 @@ sentenceID = 0;
 var summarySentences = document.getElementsByClassName("summarySentence");
 var sentences = document.getElementsByClassName("sentence");
 var sentenceDots = document.getElementsByClassName("sentenceDot");
-dotMode = true;
 counters = document.getElementsByClassName('counter');
 activeTab = "summary";
-
-dotModeCheck();
+theme = "white"
 
 window.onload = initialisePage();
 window.onload = openTab('summary');
-
-function dotModeCheck(){
-	if(sentences.length >= 50){
-		dotMode = false;
-		document.getElementById("dots").style.display = "none";
-		document.getElementById("dotsOn").style.display = "none";
-	}
-	else{
-		document.getElementById("dotsOff").style.display = "none";
-	}
-}
 
 function openTab(tabName) {
   	var tabs = document.getElementsByClassName("tab");
   	var tabButtons = document.getElementsByClassName("tabButton");
 	for (var i = 0; i < tabs.length; i++) {
-  	  tabs[i].style.display = "none"; 
-		tabButtons[i].style.color = "rgba(0,0,0,0.5)";
+  	  	tabs[i].style.display = "none"; 
+		tabButtons[i].style.color = "var(--text-color)";
 		tabButtons[i].setAttribute('active', 'false');
   	}
   	document.getElementById(tabName).style.display = "block"; 
-	document.getElementById(tabName+'Button').style.color = "black";
 	document.getElementById(tabName+'Button').setAttribute('active', 'true');
 	activeTab = tabName;
 	sentenceID = 0;
 	clearSentences();
 	sentences[sentenceID].style.display = "block";
 	summarySentences[sentenceID].style.display = "flex";
-	if(dotMode) sentenceDots[0].style.background = "rgb(68, 180, 254)";
 	changeButtons();
 }
 
@@ -157,8 +165,7 @@ function nextSentence(){
 		if(sentenceID < sentences.length-1){
 			clearSentences();
 			sentenceID = sentenceID + 1;
-			sentences[sentenceID].style.display = "block";
-			if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";		
+			sentences[sentenceID].style.display = "block";			
 			changeButtons();
 		}
 	}		
@@ -177,8 +184,7 @@ function prevSentence(){
 		if(sentenceID > 0){
 			clearSentences();
 			sentenceID = sentenceID - 1;
-			sentences[sentenceID].style.display = "block";	
-			if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";	
+			sentences[sentenceID].style.display = "block";		
 			changeButtons();
 		}	
 	}
@@ -188,7 +194,6 @@ function sentenceSet(index){
 	clearSentences();
 	sentenceID = index;
 	sentences[sentenceID].style.display = "block";	
-	if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";
 	changeButtons();	
 }
 
@@ -223,14 +228,15 @@ function changeButtons(){
 	if(activeTab == "sentences"){
 		for(var counter of counters){
 			counter.innerHTML = sentenceID+1 + " of " + sentences.length;
-		}	
+		}
+		sentenceDots[sentenceID].style.background = "var(--accent)";
 	}
 }
 
 function clearSentences(){
 	for (var i = 0; i < sentences.length; i++) {
 		sentences[i].style.display = "none"; 
-		if(dotMode) sentenceDots[i].style.background = "grey";
+		sentenceDots[i].style.background = "var(--inactive)";
 	}
 	for (var i = 0; i < summarySentences.length; i++) {
 		summarySentences[i].style.display = "none"; 
@@ -240,14 +246,28 @@ function clearSentences(){
 function initialisePage(){
 	for (var i = 0; i < sentences.length; i++) {
 		sentences[i].style.display = "none"; 
-		if(dotMode) sentenceDots[i].style.background = "grey";
+		sentenceDots[i].style.background = "var(--inactive)";
 	}
 	sentences[sentenceID].style.display = "block";
-	if(dotMode) sentenceDots[sentenceID].style.background = "rgb(68, 180, 254)";
-
-	for(var counter of counters){
-		counter.innerHTML = sentenceID+1 + " of " + sentences.length;
-	}
 	changeButtons();
+}
+
+function changeTheme(){
+	if(theme == "white"){
+		document.documentElement.style.setProperty('--main-color', '#333333');
+		document.documentElement.style.setProperty('--text-color', 'white');
+		document.documentElement.style.setProperty('--transparent', '#0000004f');
+		document.documentElement.style.setProperty('--next-theme', 'white');
+		document.documentElement.style.setProperty('--inactive', 'grey');
+		theme="black"
+	}
+	else{
+		document.documentElement.style.setProperty('--main-color', 'white');
+		document.documentElement.style.setProperty('--text-color', 'black');
+		document.documentElement.style.setProperty('--transparent', '#00000014');
+		document.documentElement.style.setProperty('--next-theme', '#333333');
+		document.documentElement.style.setProperty('--inactive', '#CCCCCC');
+		theme="white"
+	}
 }
 </script>

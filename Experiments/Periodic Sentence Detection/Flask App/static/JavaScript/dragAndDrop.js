@@ -15,16 +15,22 @@ var dropHandler = function(evt){
 
     reader = new FileReader();
 
-    // Read file as text    
-    reader.readAsText(files[0], "UTF-8");
+    try{
+        // Read file as text    
+        reader.readAsText(files[0], "UTF-8");
 
-    //Runs once the reader has loaded
-    reader.onload = function(e) {
-        fileText = e.target.result
-        document.getElementById('text').value = fileText;
-        document.getElementById('text').style = "background: rgba(255,255,255,1); border: 0";
-    };
+        //Runs once the reader has loaded
+        reader.onload = function(e) {
+            fileText = e.target.result
+            document.getElementById('text').value = fileText;    
+            checkLength(); 
+        };
+    }
+    catch(exception){
+        document.getElementById('text').value = "Error: Unsupported file type. Please drag a text (.txt) file."; 
+    }
 
+    document.getElementById('text').style = "background: rgba(255,255,255,1); border: 0";
     reader.onload; 
 };
 

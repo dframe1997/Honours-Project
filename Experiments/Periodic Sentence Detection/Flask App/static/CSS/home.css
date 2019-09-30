@@ -55,6 +55,12 @@ input[type='text'], select{
     margin-bottom: 30px;
 }
 
+input[type='submit']:disabled{
+    background: grey;
+    color: rgb(63, 63, 63);
+    cursor: not-allowed;
+}
+
 form label{
     text-align: center;
 }

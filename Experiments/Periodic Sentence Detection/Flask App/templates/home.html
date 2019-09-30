@@ -8,33 +8,34 @@
 <form method="post" name="form" action="" id="form">
     <div id="textField">
         <label>Type your text/URL or drag and drop a text file.</label>
-        <textarea name="text" class="droparea" id="text"></textarea>       
+        <textarea name="text" class="droparea" id="text" onChange="checkValidity()"></textarea>       
     </div>
     <div id="options">
         <div class="inputAndLabel">
             <label>Select the type of input you are using</label>
             <select name="textType" id="textType"/>
+                <option value="Auto">Detect automatically</option>
                 <option value="Text">Text</option>
                 <option value="URL">URL</option>
-                <option value="Test">Test</option>
+                <option value="Test">Built-in test data</option>
             </select>
         </div>
-        <div class="inputAndLabel">
+        <div style="display: none" class="inputAndLabel">
             <label>Run in debug mode?</label>
             <select name="debug" id="debug"/>
                 <option value="False">No</option>
                 <option value="True">Yes</option>
             </select>
         </div>
-        <div class="inputAndLabel">
-            <label>Check if argument?</label>
+        <div style="display: none" class="inputAndLabel">
+            <label>Check for arguments?</label>
             <select name="argument" id="argument"/>
                 <option value="False">No</option>
                 <option value="True">Yes</option>
             </select>
         </div>
         <div class="inputAndLabel">
-            <label>Select your preferred output type</label>
+            <label>Select an output type</label>
             <select name="outputFormat" id="outputFormat"/>
                 <option value="html">HTML Webpage (Interactive)</option>
                 <option value="pickle">Pickle (For Python projects)</option>
@@ -42,7 +43,7 @@
                 <!-- NOT IMPLEMENTED <option value="sadface">SADFace (For argument mining)</option> -->
             </select>
         </div>
-        <input type="submit" name="submit" id="submit" value="Start Mining" onclick="load()"/>
+        <input type="submit" name="submit" id="submit" value="Start Mining" onclick="load()" disabled="true"/>
     </div>
 </form>
 <div id="loading">
@@ -54,3 +55,19 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="../static/JavaScript/loadingScreen.js"></script>
 <script type="text/javascript" src="../static/JavaScript/dragAndDrop.js"></script>
+<script>
+    submitButton = document.getElementById("submit");
+    textarea = document.getElementById("text");
+    $('#text').on('input propertychange', function() {
+        checkLength();
+    });
+    function checkLength(){
+        console.log("Textarea length: " + textarea.value.length)
+        if(textarea.value.length > 0){
+            submitButton.disabled = false;
+        }
+        else{
+            submitButton.disabled = true;
+        }
+    }
+</script>

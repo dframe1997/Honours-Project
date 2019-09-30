@@ -1,3 +1,12 @@
+:root {
+    --main-color: white;
+    --text-color: black;
+    --transparent: #00000014;
+    --accent: #48b1fe;
+    --inactive: #CCCCCC;
+    --next-theme: #333333;
+}
+
 html{
     overflow: hidden;
 }
@@ -6,7 +15,8 @@ body{
     width: 100%;
     margin: 0;
     text-align: center;
-    color: black;
+    color: var(--text-color);
+    background: var(--main-color);
     font-family: nunito;
     display: flex;
     flex-direction: column;
@@ -55,11 +65,11 @@ nav{
     justify-self: flex-end;
     justify-content: flex-start;
     flex-wrap: wrap;
-    background: white;
+    background: var(--main-color);
     position: sticky;
     top: 0;
     display: flex;
-    box-shadow: 4px 2px 8px 0px #00000017;
+    box-shadow: 4px 2px 8px 0px var(--transparent);
 }
 
 nav button, nav a{
@@ -118,16 +128,12 @@ p{
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
-    background: #3c3c3c;
+    background: var(--main-color);
     align-items: center;
-    box-shadow: 2px 2px 5px 0px #cccccc;
+    box-shadow: 2px 2px 5px 0px var(--transparent);
     margin: -30px;
     margin-bottom: 30px;
     padding: 8px;
-}
-
-.counter{
-    color: white;
 }
 
 #dots, #navigation{
@@ -148,27 +154,39 @@ p{
     margin: 2px;
 }
 
+.dotBorder{
+    border: 2px solid var(--text-color);
+}
+
 #footer{
     text-align: center;
     margin-top: 10px;
 }
 
-.summaryDetails{
-    background: white;
-    color: black;
+#footer a{
+    color: var(--text-color);
+}
+
+.summarySentence, .summaryDetails{
+    background: var(--main-color);
+    color: var(--text-color);
     border-radius: 5px;
     padding: 10px;
-    width: 80vw;
-    height: 10vh;
+    min-height: 10vh;
     margin: 5px;
-    box-shadow: 2px 2px 7px 0px #00000014;
+    box-shadow: 2px 2px 7px 0px var(--transparent);
     display: none;
     align-items: center;
     justify-content: center;
 }
 
 .summaryDetails a{
-    color: white;
+    color: var(--text-color);
+}
+
+.summaryDetails{
+    display: flex;
+    justify-content: flex-start;
 }
 
 h3{
@@ -178,6 +196,8 @@ h3{
     -webkit-text-fill-color: transparent;
     padding: 10px;
     font-size: 40px;
+    min-width: 180px;
+    max-width: 180px;
 }
 
 h1{
@@ -192,9 +212,9 @@ h1{
 #sentenceSummaryContainer{
     display: flex;
     overflow: auto;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    margin-bottom: 5vh;
 }
 
 #numPeriodic{
@@ -202,25 +222,40 @@ h1{
 }
 
 .arrowButton{
-    width: 15px;
+    min-width: 15px;
     height: 15px;
     cursor: default;
-    color: grey;
-    border: 2px solid grey;
+    color: var(--inactive);
+    border: 2px solid var(--inactive);
     border-radius: 100%;
     background: transparent;
     padding: 10px;
     text-align: center;
     transition: all 0.2s ease-in-out;
+    margin: 0 5px 0 5px;
 }
 
 .arrowButton[active="true"]{
     cursor: pointer;
-    color: #48b1fe;
-    border: 2px solid #48b1fe;
+    color: var(--accent);
+    border: 2px solid var(--accent);
 }
 
 .arrowButton[active="true"]:hover{
-    color: white;
-    background: #48b1fe;
+    color: var(--main-color);
+    background: var(--accent);
 }
+
+#themeButtonContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px 10px 0;
+}
+
+#themeButton{
+    background: var(--next-theme);
+    border: 2px solid var(--accent);
+    border-radius: 100%;
+}
+
