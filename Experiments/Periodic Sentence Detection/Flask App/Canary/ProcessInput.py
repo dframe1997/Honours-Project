@@ -4,6 +4,7 @@ from Canary.OutputFormat import OutputObject
 import nltk
 from nltk.tokenize import sent_tokenize
 from string import printable
+from flask import abort
 
 nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\NLTK")
 
@@ -44,7 +45,7 @@ def splitSentences(text):
 
 def processURL(url):
     article = Article(url)
-    try{
+    try:
         article.download()
         article.parse()   
         article.nlp()
@@ -52,10 +53,8 @@ def processURL(url):
         #sentences = splitSentences("URLs are not supported at this time for legal reasons.")
         output = OutputObject(url, article.title, article.authors, article.publish_date, article.top_image, article.movies, article.text, article.keywords, article.summary, 0, sentences)
         #output = OutputFormat.Output(url, "Input from URL", "No author specified", "Publish date unknown", "top_image", "movies", "URLs are not supported at this time for legal reasons.", "No keywords found", "", 0, sentences)
-    }
-    catch(Exception e){
+    except:
         abort(403)
-    }
     
     return output
 
