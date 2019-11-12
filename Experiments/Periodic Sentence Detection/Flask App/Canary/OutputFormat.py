@@ -1,4 +1,4 @@
-class Output():  
+class OutputObject():  
     def __init__(self, url, title, author, publishDate, topImage, videos, text, keywords, summary, numPeriodic, sentences):
         self.url = url
         self.title = title

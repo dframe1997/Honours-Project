@@ -24,6 +24,7 @@
 <div id="mainContent">
 	<div id="summary" class="tab">
 		<h1 id="numPeriodic">{{ output.numPeriodic }}</h1>
+		{% if (output.sentences | selectattr('periodic', 'equalto', True) | list | count > 0) %}
 		<div id="sentenceSummaryContainer">
 			<i enabled='false' id="prevSumSentence" onclick="prevSentence()" class="arrowButton fas fa-chevron-left"></i>
 			{% for sentence in output.sentences if sentence.periodic == True %}
@@ -33,6 +34,7 @@
 			{% endfor %}
 			<i enabled='true' id="nextSumSentence" onclick="nextSentence()" class="arrowButton fas fa-chevron-right"></i>
 		</div>
+		{% endif %}
 		{% if textType == "URL"  %}
 		<div class="summaryDetails">
 			<h3>Article details</h3>
@@ -148,7 +150,9 @@ function openTab(tabName) {
 	sentenceID = 0;
 	clearSentences();
 	sentences[sentenceID].style.display = "block";
-	summarySentences[sentenceID].style.display = "flex";
+	if(summarySentences.length > 0){
+		summarySentences[sentenceID].style.display = "flex";
+	}
 	changeButtons();
 }
 
@@ -199,30 +203,35 @@ function sentenceSet(index){
 
 function changeButtons(){
 	sentenceNum = 0;
+	prevButton = null;
+	nextButton = null;
+
 	if(activeTab == "sentences"){
 		sentenceNum = sentences.length-1;
 		prevButton = document.getElementById("prevSentence");
 		nextButton = document.getElementById("nextSentence");
 	}
-	else
+	else if(document.getElementById("prevSumSentence") != null && document.getElementById("nextSumSentence") != null)
 	{
 		sentenceNum = summarySentences.length-1;
 		prevButton = document.getElementById("prevSumSentence");
 		nextButton = document.getElementById("nextSumSentence");
 	}
 
-	if(sentenceID > 0){
-		prevButton.setAttribute('active', 'true');
-	}
-	else{
-		prevButton.setAttribute('active', 'false');
-	}
+	if(prevButton != null && nextButton != null){
+		if(sentenceID > 0){
+			prevButton.setAttribute('active', 'true');
+		}
+		else{
+			prevButton.setAttribute('active', 'false');
+		}
 
-	if(sentenceID < sentenceNum){
-		nextButton.setAttribute('active', 'true');
-	}
-	else{
-		nextButton.setAttribute('active', 'false');
+		if(sentenceID < sentenceNum){
+			nextButton.setAttribute('active', 'true');
+		}
+		else{
+			nextButton.setAttribute('active', 'false');
+		}
 	}
 	
 	if(activeTab == "sentences"){
@@ -238,9 +247,11 @@ function clearSentences(){
 		sentences[i].style.display = "none"; 
 		sentenceDots[i].style.background = "var(--inactive)";
 	}
-	for (var i = 0; i < summarySentences.length; i++) {
-		summarySentences[i].style.display = "none"; 
-	}
+	if(summarySentences.length > 0){
+		for (var i = 0; i < summarySentences.length; i++) {
+			summarySentences[i].style.display = "none"; 
+		}
+	}	
 }
 
 function initialisePage(){

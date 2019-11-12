@@ -15,11 +15,11 @@ nltk.data.path.append(r"D:\Users\David\Documents\Work\University\Year 4\Honours\
 berkeleyPath = "../../../../berkeleyparser/berkeleyParser-1.7.jar"
 grammarPath = "../../../../berkeleyparser/eng_sm6.gr"
 
-prepositionSearchDepth = 3 #2(60%) #3(70%) #4(57.81%) #5(51.39%) #7(24.8%)
+subordinatingConjunctionSearchDepth = 3 #2(60%) #3(70%) #4(57.81%) #5(51.39%) #7(24.8%)
 depthIncreaseThreshold = 10
 
 def startingWords(sentence, debug):
-    for index in range(prepositionSearchDepth):
+    for index in range(subordinatingConjunctionSearchDepth):
         if len(sentence.tagged) > index:
             if sentence.tagged[index][1] == "IN":# or sentence.tagged[index][1] == "WDT" or sentence.tagged[index][1] == "WP" or sentence.tagged[index][1] == "WP$" or sentence.tagged[index][1] == "WRB": #IN represents prepositions or 'subordinating conjunctions' which are often found at the start of a subordinate clause and therefore a periodic sentence
                 return True

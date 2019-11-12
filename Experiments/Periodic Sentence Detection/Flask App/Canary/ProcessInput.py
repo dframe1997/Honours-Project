@@ -1,5 +1,6 @@
 from newspaper import Article
-from Canary import SentenceFormat, OutputFormat
+from Canary.SentenceFormat import SentenceObject
+from Canary.OutputFormat import OutputObject
 import nltk
 from nltk.tokenize import sent_tokenize
 from string import printable
@@ -37,18 +38,25 @@ def splitSentences(text):
 
         tree = None
 
-        newSentence = SentenceFormat.SentenceObject(sentenceText, tokens, tagged, tree)
+        newSentence = SentenceObject(sentenceText, tokens, tagged, tree)
         sentenceObjectList.append(newSentence)
     return sentenceObjectList
 
 def processURL(url):
     article = Article(url)
-    article.download()
-    article.parse()   
-    article.nlp()
-    sentences = splitSentences(article.text)
-
-    output = OutputFormat.Output(url, article.title, article.authors, article.publish_date, article.top_image, article.movies, article.text, article.keywords, article.summary, 0, sentences)
+    try{
+        article.download()
+        article.parse()   
+        article.nlp()
+        sentences = splitSentences(article.text)
+        #sentences = splitSentences("URLs are not supported at this time for legal reasons.")
+        output = OutputObject(url, article.title, article.authors, article.publish_date, article.top_image, article.movies, article.text, article.keywords, article.summary, 0, sentences)
+        #output = OutputFormat.Output(url, "Input from URL", "No author specified", "Publish date unknown", "top_image", "movies", "URLs are not supported at this time for legal reasons.", "No keywords found", "", 0, sentences)
+    }
+    catch(Exception e){
+        abort(403)
+    }
+    
     return output
 
 def process(text, textType):
@@ -60,19 +68,19 @@ def process(text, textType):
             text = "Input.txt"
         sentencesText = openFile(text)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
+        output = OutputObject(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     elif textType == "Periodic":
         sentencesText = openFile("D:/Users/David/Documents/Work/University/Year 4/Honours/Honours-Project/Experiments/Periodic Sentence Detection/Dataset/Periodic.txt", True)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
+        output = OutputObject(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     elif textType == "NotPeriodic":
         sentencesText = openFile("D:/Users/David/Documents/Work/University/Year 4/Honours/Honours-Project/Experiments/Periodic Sentence Detection/Dataset/NotPeriodic.txt", True)
         sentences = splitSentences(sentencesText)
-        output = OutputFormat.Output(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
+        output = OutputObject(text, "Input from file", "No author specified", "Publish date unknown", "top_image", "movies", sentencesText, "No keywords found", "", 0, sentences)
         return output
     else:
         sentences = splitSentences(text)
-        output = OutputFormat.Output(text, "Input from webpage", "No author specified", "Publish date unknown", "top_image", "movies", text, "No keywords found", "", 0, sentences)
+        output = OutputObject(text, "Input from webpage", "No author specified", "Publish date unknown", "top_image", "movies", text, "No keywords found", "", 0, sentences)
         return output

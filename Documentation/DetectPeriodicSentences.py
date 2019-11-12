@@ -1,5 +1,7 @@
 #Functions to detect periodic sentences
+from Canary import SentenceFormat, helperFunctions
 import nltk
+import time
 from nltk.tokenize import sent_tokenize
 from nltk.tree import ParentedTree
 import sys
@@ -39,7 +41,7 @@ def treeStructure(sentence, debug, parserTool):
     tree = ParentedTree.fromstring(treeString) 
 
     for subtree in tree.subtrees():     
-        if subtree.parent() == tree: #MAY BE INCORRECT
+        if subtree.parent() == tree:
             print(subtree.label())
              #tree height is the number of subtrees under it, so the top few layers will have the greatest height #Possibly dynamic based on length of sentence?
             if subtree.label() != "VP": #Some periodic sentences break this rule, fix to improve accuracy
