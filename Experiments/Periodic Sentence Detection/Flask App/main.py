@@ -51,7 +51,7 @@ def reloadParser():
 parserReloadThread = Thread(target=reloadParser)
 parserReloadThread.start()
 
-def testAlgorithm():
+def testAlgorithm(text, debug, argument):
     #Run tests
     allNewSentences = [] #This will hold all of the sentences from both batches
     output = ProcessInput.process("", "Periodic") #Load the periodic sentences ready for testing
@@ -117,7 +117,8 @@ def API():
 
     #Load the appropriate page based on textType
     if textType == "Test":
-        output.sentences, periodicScore, notPeriodicScore, numPeriodic = testAlgorithm()
+        output = ProcessInput.process("", "Periodic")
+        output.sentences, periodicScore, notPeriodicScore, numPeriodic = testAlgorithm(text, debug, argument)
     else:
         output = ProcessInput.process(text, textType) #Process the text into an output format
 
@@ -203,15 +204,15 @@ def Test():
 
 #Error pages
 @app.errorhandler(404)
-def page_not_found(e):
+def PageNotFound(e):
     return render_template('error/404.html'), 404
 
 @app.errorhandler(403)
-def page_not_found(e):
+def InvalidData(e):
     return render_template('error/403.html'), 403
 
 @app.errorhandler(500)
-def page_not_found(e):
+def InternalServerError(e):
     return render_template('error/500.html'), 500
 
 #Run the application

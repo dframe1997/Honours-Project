@@ -55,19 +55,4 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="../static/JavaScript/loadingScreen.js"></script>
 <script type="text/javascript" src="../static/JavaScript/dragAndDrop.js"></script>
-<script>
-    submitButton = document.getElementById("submit");
-    textarea = document.getElementById("text");
-    $('#text').on('input propertychange', function() {
-        checkLength();
-    });
-    function checkLength(){
-        console.log("Textarea length: " + textarea.value.length)
-        if(textarea.value.length > 0){
-            submitButton.disabled = false;
-        }
-        else{
-            submitButton.disabled = true;
-        }
-    }
-</script>
+<script type="text/javascript" src="../static/JavaScript/textBoxValidation.js"></script>
