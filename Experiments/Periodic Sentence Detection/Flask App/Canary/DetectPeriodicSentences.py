@@ -39,11 +39,12 @@ def treeStructure(sentence, debug, parserTool):
     tree = ParentedTree.fromstring(treeString) 
 
     for subtree in tree.subtrees():     
-        if subtree.parent() == tree: #MAY BE INCORRECT
+        if subtree.parent() == tree:
             print(subtree.label())
              #tree height is the number of subtrees under it, so the top few layers will have the greatest height #Possibly dynamic based on length of sentence?
             if subtree.label() != "VP": #Some periodic sentences break this rule, fix to improve accuracy
-                if any(x.label() == "S" for x in subtree.subtrees()) or any(x.label() == "SBAR" for x in subtree.subtrees()):
+                if any(x.label() == "S" for x in subtree.subtrees()) or any(x.label() == "SBAR" for x in subtree.subtrees()): #and x != subtree #Add this to not check the subtree itself for s/sbar
+                    print(subtree)
                     return True           
             #else:
             #if any(x.label() == "S" for x in subtree.subtrees()) or any(x.label() == "SBAR" for x in subtree.subtrees()):
