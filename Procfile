@@ -1,0 +1,1 @@
+web: set FLASK_APP='./Experiments/Periodic Sentence Detection/Flask App/main.py' & flask run
