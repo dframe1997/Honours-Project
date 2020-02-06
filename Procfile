@@ -1,1 +1,1 @@
-web: gunicorn app='./Experiments/Periodic Sentence Detection/Flask App/main'
+web: gunicorn 'Experiments.Periodic Sentence Detection.Flask App.main.app'
