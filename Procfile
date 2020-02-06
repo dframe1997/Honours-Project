@@ -1,1 +1,1 @@
-web: set FLASK_APP='./Experiments/Periodic Sentence Detection/Flask App/main.py' & flask run
+web: gunicorn app='./Experiments/Periodic Sentence Detection/Flask App/main'
