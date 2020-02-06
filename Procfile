@@ -1,1 +1,1 @@
-web: env PYTHONPATH='/Experiments/Periodic Sentence Detection/Flask App' gunicorn 'Experiments.Periodic Sentence Detection.Flask App.main.app'
+web: gunicorn --pythonpath main.app
